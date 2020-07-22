@@ -5,10 +5,12 @@ namespace App\Entity;
 use App\Repository\APIRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 
 /**
  * @ORM\Entity(repositoryClass=APIRepository::class)
+ * @UniqueEntity(fields={"name"}, message="Une API possède déjà ce nom")
  */
 class API
 {
@@ -40,7 +42,7 @@ class API
     private $category;
 
     /**
-     *@var \DateTimeInterface $createdAt
+     * @var \DateTimeInterface $updatedAt
      *
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime")
