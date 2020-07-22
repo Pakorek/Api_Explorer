@@ -16,6 +16,7 @@ class APIType extends AbstractType
             ->add('description')
             ->add('url')
             ->add('category')
+            ->add('apiKey')
         ;
     }
 

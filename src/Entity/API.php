@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\APIRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+
 
 /**
  * @ORM\Entity(repositoryClass=APIRepository::class)
@@ -38,6 +40,9 @@ class API
     private $category;
 
     /**
+     *@var \DateTimeInterface $createdAt
+     *
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime")
      */
     private $updatedAt;
