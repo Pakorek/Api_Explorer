@@ -77,28 +77,56 @@ class APIController extends AbstractController
      * @Route("/{id}", name="show", methods={"GET","POST"})
      * @param API $api
      * @param apiManager $apiManager
+     * @param EntityManagerInterface $em
      * @return Response
      */
     public function show(API $api, apiManager $apiManager, EntityManagerInterface $em): Response
     {
+        $doctrine = $this->getDoctrine();
+
         if (isset($_POST['search_id']))
         {
             $search = $apiManager->cleanInput($_POST['search_id']);
-            $response = self::getAPIId($search, $api->getApiKey());
+            $response = $apiManager->getAPIId($search, $api->getApiKey());
+
+            if (empty($response->results)) {
+                $this->addFlash('info','Aucune série trouvée');
+                return $this->redirectToRoute('api_show', ['id' => $api->getId()]);
+            }
+
+            if (count($response->results) === 1) {
+                $this->addFlash('success','Une série trouvée !');
+            } else {
+                $this->addFlash('success',count($response->results) . ' séries trouvées');
+            }
 
             return $this->render('api/show.html.twig', ['series' => $response, 'api' => $api]);
         }
 
         if (isset($_POST['search_by_id'])) {
             $id = $apiManager->cleanInput($_POST['search_by_id']);
-            $infos = self::getProgramInformationsWithAPIId($id, $api->getApiKey());
-            $details = self::getAllDetails($id, sizeof($infos->tvSeriesInfo->seasons), $api->getApiKey());
+            $infos = $apiManager->getProgramInfosWithAPIId($id, $api->getApiKey());
+            $details = $apiManager->getAllDetails($id, sizeof($infos->tvSeriesInfo->seasons), $api->getApiKey());
 
             // MaJ BDD API - loops on seasons
-            $apiManager->getAllDetails($em, $infos, $details);
+            $apiManager->fillApiDB($em, $infos, $details);
 
             return $this->render('api/show.html.twig', ['infos' => $infos, 'details' => $details, 'api' => $api]);
         }
+
+        if (isset($_POST['update_bdd'])) {
+            $repos = $apiManager->getAllApiRepo($doctrine);
+            $programExist = $doctrine
+                ->getRepository(Program::class)
+                ->findOneBy(['title' => $repos['api_program'][0]->getTitle()]);
+            if (!$programExist) {
+                $apiManager->updateBDD($em, $repos, $doctrine);
+                $this->addFlash('success', 'Tous les détails du programme sont désormais dans la base de donnée');
+            } else {
+                $this->addFlash('success', 'Les données relatives au programme ont été mises à jour ');
+            }
+        }
+
 
 
         return $this->render('api/show.html.twig', ['api' => $api]);
@@ -142,140 +170,5 @@ class APIController extends AbstractController
         }
 
         return $this->redirectToRoute('api_index');
-    }
-
-    public function getAllApiRepo():array
-    {
-        return $repos = [
-            'api_program' => $this->getDoctrine()->getRepository(ApiProgram::class)->findAll(),
-            'api_season' => $this->getDoctrine()->getRepository(ApiSeason::class)->findAll(),
-            'api_episode' => $this->getDoctrine()->getRepository(ApiEpisode::class)->findAll(),
-            'api_actor' => $this->getDoctrine()->getRepository(ApiActor::class)->findAll(),
-            'api_creator' => $this->getDoctrine()->getRepository(ApiCreator::class)->findAll(),
-            'api_category' => $this->getDoctrine()->getRepository(ApiCategory::class)->findAll()
-        ];
-    }
-
-
-    /**
-     * @Route("/dropDB", name="drop")
-     * @param EntityManagerInterface $em
-     * @return RedirectResponse
-     */
-    public function dropDB(EntityManagerInterface $em):RedirectResponse
-    {
-        $repos = $this->getAllApiRepo();
-
-        foreach ($repos as $repo => $obj) {
-            if ($repo == 'api_program') {
-                $em->remove($repos['api_program'][0]);
-            } else {
-                foreach ($obj as $object) {
-                    $em->remove($object);
-                }
-            }
-        }
-        $em->flush();
-
-        return $this->redirectToRoute('admin_getSerie');
-    }
-
-    /**
-     * get API id from IMDB API
-     * and pick up the official title format
-     *
-     * @param string $search
-     * @param $key
-     * @return mixed
-     */
-    public static function getAPIId(string $search, $key)
-    {
-        // appliquer une fonction à $search pour les cas avec plusieurs mots
-        // ex: Breaking Bad         (un truc du genre replace(' ','%20',$search)
-
-
-
-        $curl = curl_init();
-
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://imdb-api.com/en/API/SearchSeries/". $key . "/$search",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "GET",
-        ));
-
-        $response = curl_exec($curl);
-
-        curl_close($curl);
-
-        return json_decode($response);
-    }
-
-    /**
-     * get details from one program with API_id
-     *
-     * @param string $id
-     * @param $key
-     * @return mixed
-     */
-    public static function getProgramInformationsWithAPIId(string $id, $key)
-    {
-        $curl = curl_init();
-
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://imdb-api.com/en/API/Title/". $key ."/$id",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "GET",
-        ));
-
-        $response = curl_exec($curl);
-
-        curl_close($curl);
-
-        return json_decode($response);
-    }
-
-    /**
-     * get details from each season
-     *
-     * @param string $id
-     * @param int $seasons
-     * @param $key
-     * @return array
-     */
-    public static function getAllDetails(string $id, int $seasons, $key):array
-    {
-        $details = [];
-        $curl = curl_init();
-
-        for ($i=1;$i<$seasons+1;$i++) {
-            curl_setopt_array($curl, array(
-                CURLOPT_URL => "https://imdb-api.com/en/API/SeasonEpisodes/". $key ."/$id/$i",
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => "",
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 0,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => "GET",
-            ));
-
-            $response = curl_exec($curl);
-
-            $details["season_$i"] = json_decode($response);
-        }
-
-        curl_close($curl);
-
-        return $details;
     }
 }

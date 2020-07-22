@@ -5,6 +5,7 @@
 {% block body %}
     <h1>Bienvenue sur {{ api.name }}</h1>
 
+{#
     <article>
         <h2>Endpoints Disponibles</h2>
         <ul>
@@ -15,11 +16,12 @@
             <li><code></code></li>
         </ul>
     </article>
+#}
 
     <section class="container-fluid" id="get_data">
         <form action="" method="post">
             <fieldset>
-                <legend>Rechercher l'id d'une série</legend>
+                <legend>1° Rechercher l'id d'une série</legend>
 
                 <input type="text" name="search_id" id="search_id" placeholder="ex: Mr Robot, Breaking Bad, ...">
                 <label for="search_id"></label>
@@ -54,7 +56,7 @@
 
             <form method="post">
                 <fieldset>
-                    <legend>Obtenir les détails grâce à l'id</legend>
+                    <legend>2° Obtenir les détails grâce à l'id</legend>
 
                     <input type="text" name="search_by_id" id="search_by_id" placeholder="ex: tt2021155">
                     <label for="search_by_id"></label>
@@ -68,12 +70,6 @@
         {% if infos is defined %}
             <article>
                 <h1>Résultats obtenus</h1>
-                <br>
-                <form method="post">
-                    <input type="hidden" name="update_bdd" value="{{ infos.id }}">
-                    <button type="submit">Envoyer en base</button>
-                </form>
-                <br>
 
                 <ul>
                     <li><strong>Title : </strong>{{ infos.title }}</li>
@@ -84,6 +80,12 @@
                     <li><strong>Synopsis : </strong>{{ infos.plot }}</li>
                     <li><strong>Image : </strong>{{ infos.image }}</li>
                 </ul>
+
+                <form method="post">
+                    <input type="hidden" name="update_bdd" value="{{ infos.id }}">
+                    <button type="submit" class="btn btn-outline-light text-dark">3° Envoyer dans la BDD</button>
+                </form>
+
 
                 {% if details is defined %}
                     <h3>Les saisons en détails</h3>
