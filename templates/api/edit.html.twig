@@ -8,9 +8,10 @@
     {{ include('api/_form.html.twig', {'button_label': 'Update'}) }}
 
     <section class="container-fluid" id="get_data">
-        <h2>Obtenir les dernières données <em>Dernière mise à jour : [date_diff] </em></h2>
+        <h2>Obtenir les dernières données <em>Dernière mise à jour : {{ api.updatedAt }} </em></h2>
 
 
+{#
         {% if series is defined %}
             <article>
                 <h1>Résultats de la recherche d'ID avec "{{ series.expression }}"</h1>
@@ -27,10 +28,11 @@
         {% endif %}
 
         <br><br>
+#}
 
         {% if infos is defined %}
             <article>
-                <h1>Résultats obtenus avec id = {{ infos.id }}</h1>
+                <h1>Résultats obtenus</h1>
                 <br>
                 <form action="" method="get">
                     <input type="hidden" name="update_bdd" value="{{ infos.id }}">
