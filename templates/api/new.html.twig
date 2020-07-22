@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New API{% endblock %}
+
+{% block body %}
+    <h1>Create new API</h1>
+
+    {{ include('a_p_i/_form.html.twig') }}
+
+    <a href="{{ path('a_p_i_index') }}">back to list</a>
+{% endblock %}

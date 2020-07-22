@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit API{% endblock %}
+
+{% block body %}
+    <h1>Edit API</h1>
+
+    {{ include('a_p_i/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('a_p_i_index') }}">back to list</a>
+
+    {{ include('a_p_i/_delete_form.html.twig') }}
+{% endblock %}
