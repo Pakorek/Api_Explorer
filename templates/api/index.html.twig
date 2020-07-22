@@ -10,11 +10,12 @@
             <thead>
             <tr>
                 <th>Id</th>
-                <th>Name</th>
+                <th>Nom</th>
                 <th>Description</th>
                 <th>Url</th>
-                <th>Category</th>
-                <th>actions</th>
+                <th>Categorie</th>
+                <th>Dernière MaJ</th>
+                <th>Actions</th>
             </tr>
             </thead>
             <tbody>
@@ -23,8 +24,9 @@
                     <td>{{ api.id }}</td>
                     <td>{{ api.name }}</td>
                     <td>{{ api.description }}</td>
-                    <td>{{ api.url }}</td>
+                    <td><a href="{{ api.url }}">{{ api.url }}</a></td>
                     <td>{{ api.category }}</td>
+                    <td>{{ api.updatedAt|date('d/m/Y')}}</td>
                     <td>
                         <a href="{{ path('api_show', {'id': api.id}) }}">show</a>
                         <a href="{{ path('api_edit', {'id': api.id}) }}">edit</a>

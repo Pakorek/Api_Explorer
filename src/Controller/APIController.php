@@ -36,8 +36,6 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class APIController extends AbstractController
 {
-    const KEY = 'k_Gyn239Fh';
-
     /**
      * @Route("/", name="index", methods={"GET"})
      * @param APIRepository $apiRepository
@@ -76,15 +74,34 @@ class APIController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="show", methods={"GET"})
+     * @Route("/{id}", name="show", methods={"GET","POST"})
      * @param API $api
+     * @param apiManager $apiManager
      * @return Response
      */
-    public function show(API $api): Response
+    public function show(API $api, apiManager $apiManager, EntityManagerInterface $em): Response
     {
-        return $this->render('api/show.html.twig', [
-            'api' => $api,
-        ]);
+        if (isset($_POST['search_id']))
+        {
+            $search = $apiManager->cleanInput($_POST['search_id']);
+            $response = self::getAPIId($search, $api->getApiKey());
+
+            return $this->render('api/show.html.twig', ['series' => $response, 'api' => $api]);
+        }
+
+        if (isset($_POST['search_by_id'])) {
+            $id = $apiManager->cleanInput($_POST['search_by_id']);
+            $infos = self::getProgramInformationsWithAPIId($id, $api->getApiKey());
+            $details = self::getAllDetails($id, sizeof($infos->tvSeriesInfo->seasons), $api->getApiKey());
+
+            // MaJ BDD API - loops on seasons
+            $apiManager->getAllDetails($em, $infos, $details);
+
+            return $this->render('api/show.html.twig', ['infos' => $infos, 'details' => $details, 'api' => $api]);
+        }
+
+
+        return $this->render('api/show.html.twig', ['api' => $api]);
     }
 
     /**
@@ -164,195 +181,24 @@ class APIController extends AbstractController
     }
 
     /**
-     * @Route("/getProgram", name="getProgram")
-     *
-     * @param apiManager $apiManager
-     * @return Response
-     */
-    public function getProgram(apiManager $apiManager):Response
-    {
-        if (isset($_GET['search_id']))
-        {
-            $search = $apiManager->cleanInput($_GET['search_id']);
-            $response = self::getAPIId($search);
-
-            return $this->render('admin/getSerie.html.twig', ['series' => $response]);
-        }
-
-        if (isset($_GET['search_by_id']))
-        {
-            $id = $apiManager->cleanInput($_GET['search_by_id']);
-
-            $infos = self::getInfosWithAPIId($id);
-            $details = self::getAllDetails($id, sizeof($infos->tvSeriesInfo->seasons));
-
-            // MaJ BDD API
-            $em = $this->getDoctrine()->getManager();
-
-            $program = new ApiProgram();
-            $program->setTitle($infos->title);
-            $program->setApiId($infos->id);
-            $program->setYear(intval($infos->year));
-            $program->setPlot($infos->plot);
-            $program->setPoster($infos->image);
-            $program->setRuntime(intval($infos->runtimeMins));
-            $program->setAwards($infos->awards);
-            $program->setNbSeasons(sizeof($infos->tvSeriesInfo->seasons));
-            $program->setEndYear(intval($infos->tvSeriesInfo->yearEnd));
-            $em->persist($program);
-
-            foreach ($infos->actorList as $star) {
-                $actor = new ApiActor();
-                $actor->setApiId($star->id);
-                $actor->setName($star->name);
-                $actor->setAsCharacter($star->asCharacter);
-                $actor->setImage($star->image);
-                $em->persist($actor);
-            }
-
-            foreach ($infos->tvSeriesInfo->creatorList as $creater) {
-                $creator = new ApiCreator();
-                $creator->setApiId($creater->id);
-                $creator->setFullName($creater->name);
-                $em->persist($creator);
-            }
-
-            foreach ($infos->genreList as $genre) {
-                $category = new ApiCategory();
-                $category->setName($genre->value);
-                $em->persist($category);
-            }
-
-            for ($i=1;$i<=sizeof($infos->tvSeriesInfo->seasons);$i++) {
-                $season = new ApiSeason();
-                $season->setNumber($i);
-                $season->setYear($details["season_$i"]->year);
-                $season->setProgram($program);
-                $em->persist($season);
-
-                foreach ($details["season_$i"]->episodes as $episod) {
-                    $episode = new ApiEpisode();
-                    $episode->setNumber($episod->episodeNumber);
-                    $episode->setTitle($episod->title);
-                    $episode->setPlot($episod->plot);
-                    $episode->setReleased($episod->released);
-                    $episode->setImage($episod->image);
-                    $episode->setSeason($season);
-                    $em->persist($episode);
-                }
-            }
-            $em->flush();
-
-            return $this->render('admin/getSerie.html.twig', ['infos' => $infos, 'details' => $details]);
-        }
-
-        if (isset($_GET['update_bdd']))
-        {
-            $repos = $this->getAllApiRepo();
-
-            // MaJ BDD
-            // if !contains
-
-            $em = $this->getDoctrine()->getManager();
-
-            $program = new Program();
-            $program->setTitle($repos['api_program'][0]->getTitle());
-            $program->setApiId($repos['api_program'][0]->getApiId());
-            $program->setYear($repos['api_program'][0]->getYear());
-            $program->setSummary($repos['api_program'][0]->getPlot());
-            $program->setPoster($repos['api_program'][0]->getPoster());
-            $program->setRuntime($repos['api_program'][0]->getRuntime());
-            $program->setAwards($repos['api_program'][0]->getAwards());
-            $program->setNbSeasons($repos['api_program'][0]->getNbSeasons());
-            $program->setEndYear($repos['api_program'][0]->getEndYear());
-
-            foreach ($repos['api_actor'] as $_actor) {
-                $actorExist = $this->getDoctrine()
-                    ->getRepository(Actor::class)
-                    ->findOneBy(['name' => $_actor->getName()]);
-
-                if (!$actorExist) {
-                    $actor = new Actor();
-                    $actor->setName($_actor->getName());
-                    $actor->setImage($_actor->getImage());
-                    $em->persist($actor);
-                    $program->addActor($actor);
-                }
-            }
-
-            foreach ($repos['api_creator'] as $_creator) {
-                $creatorExist = $this->getDoctrine()
-                    ->getRepository(Creator::class)
-                    ->findOneBy(['fullName' => $_creator->getFullName()]);
-
-                if (!$creatorExist) {
-                    $creator = new Creator();
-                    $creator->setFullName($_creator->getFullName());
-                    $em->persist($creator);
-                    $program->addCreator($creator);
-                }
-            }
-
-            foreach ($repos['api_category'] as $_cat) {
-                $catExist = $this->getDoctrine()
-                    ->getRepository(Category::class)
-                    ->findOneBy(['name' => $_cat->getName()]);
-
-                if (!$catExist) {
-                    $category = new Category();
-                    $category->setName($_cat->getName());
-                    $em->persist($category);
-                    $program->addCategory($category);
-                }
-            }
-            $em->persist($program);
-
-            foreach ($repos['api_season'] as $ap_season) {
-                $season = new Season();
-                $season->setNumber($ap_season->getNumber());
-                $season->setYear($ap_season->getYear());
-                $season->setDescription('...');
-                $season->setProgram($program);
-
-                foreach ($repos['api_episode'] as $episod) {
-                    if ($episod->getSeason()->getNumber() == $ap_season->getNumber()) {
-                        $episode = new Episode();
-                        $episode->setNumber($episod->getNumber());
-                        $episode->setTitle($episod->getTitle());
-                        $episode->setSynopsis($episod->getPlot());
-                        $episode->setPoster($episod->getImage());
-                        $episode->setReleased($episod->getReleased());
-                        $episode->setSeason($season);
-                        $season->addEpisode($episode);
-                        $em->persist($episode);
-                    }
-                }
-                $em->persist($season);
-            }
-            $em->flush();
-
-            // Clear API BDD
-            $this->dropApiDB();
-        }
-        return $this->render('admin/getSerie.html.twig');
-    }
-
-    /**
      * get API id from IMDB API
      * and pick up the official title format
      *
      * @param string $search
+     * @param $key
      * @return mixed
      */
-    public static function getAPIId(string $search)
+    public static function getAPIId(string $search, $key)
     {
         // appliquer une fonction à $search pour les cas avec plusieurs mots
         // ex: Breaking Bad         (un truc du genre replace(' ','%20',$search)
 
+
+
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://imdb-api.com/en/API/SearchSeries/". self::KEY . "/$search",
+            CURLOPT_URL => "https://imdb-api.com/en/API/SearchSeries/". $key . "/$search",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
@@ -373,14 +219,15 @@ class APIController extends AbstractController
      * get details from one program with API_id
      *
      * @param string $id
+     * @param $key
      * @return mixed
      */
-    public static function getInfosWithAPIId(string $id)
+    public static function getProgramInformationsWithAPIId(string $id, $key)
     {
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://imdb-api.com/en/API/Title/". self::KEY ."/$id",
+            CURLOPT_URL => "https://imdb-api.com/en/API/Title/". $key ."/$id",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
@@ -402,16 +249,17 @@ class APIController extends AbstractController
      *
      * @param string $id
      * @param int $seasons
+     * @param $key
      * @return array
      */
-    public static function getAllDetails(string $id, int $seasons):array
+    public static function getAllDetails(string $id, int $seasons, $key):array
     {
         $details = [];
         $curl = curl_init();
 
         for ($i=1;$i<$seasons+1;$i++) {
             curl_setopt_array($curl, array(
-                CURLOPT_URL => "https://imdb-api.com/en/API/SeasonEpisodes/". self::KEY ."/$id/$i",
+                CURLOPT_URL => "https://imdb-api.com/en/API/SeasonEpisodes/". $key ."/$id/$i",
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => "",
                 CURLOPT_MAXREDIRS => 10,
