@@ -1,3 +1,27 @@
+@import "~bootstrap/scss/bootstrap";
+
+$background: #111;
+$orange: #F37A28;
+$orange-red: #DB4443;
+$dark-pink: #B21152;
+$purple: #7C0057;
+$dark-purple: #41004E;
+$white: #FFF;
+
+$theme-colors: (
+        "primary": $orange,
+        "danger": $dark-pink
+);
+
 body {
-    background-color: lightgray;
+    background-color: $background;
+    color: $white;
+}
+
+#header_base {
+    margin-bottom: 100px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: $purple;
 }
