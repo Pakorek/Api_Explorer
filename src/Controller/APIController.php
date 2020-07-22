@@ -2,31 +2,13 @@
 
 namespace App\Controller;
 
-use App\Entity\Actor;
 use App\Entity\API;
-use App\Entity\ApiActor;
-use App\Entity\ApiCategory;
-use App\Entity\ApiCreator;
-use App\Entity\ApiEpisode;
-use App\Entity\ApiProgram;
-use App\Entity\ApiSeason;
-use App\Entity\Category;
-use App\Entity\Creator;
-use App\Entity\Episode;
 use App\Entity\Program;
-use App\Entity\Season;
 use App\Form\APIType;
-use App\Repository\ApiActorRepository;
-use App\Repository\ApiCategoryRepository;
-use App\Repository\ApiCreatorRepository;
-use App\Repository\ApiEpisodeRepository;
-use App\Repository\ApiProgramRepository;
 use App\Repository\APIRepository;
-use App\Repository\ApiSeasonRepository;
 use App\Services\apiManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -126,8 +108,6 @@ class APIController extends AbstractController
                 $this->addFlash('success', 'Les données relatives au programme ont été mises à jour ');
             }
         }
-
-
 
         return $this->render('api/show.html.twig', ['api' => $api]);
     }
