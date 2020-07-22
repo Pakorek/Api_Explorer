@@ -33,4 +33,24 @@ class UserController extends AbstractController
 
         return $this->render('user/index.html.twig');
     }
+
+    public function showAllApi(): Response
+    {
+        return $this->render('user/show.html.twig');
+    }
+
+    public function showCategories(): Response
+    {
+        return $this->render('admin/show_categories.html.twig');
+    }
+
+    public function showAPI(): Response
+    {
+        return $this->render('admin/api_page.html.twig');
+    }
+
+//    public function favoris(): Response
+//    {
+//        return $this->render('admin/parameters.html.twig');
+//    }
 }
