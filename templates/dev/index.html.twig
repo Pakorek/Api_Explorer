@@ -1,15 +1,29 @@
-{% extends 'base.html.twig' %}
+{% extends "base.html.twig" %}
 
-{% block title %}Edit API{% endblock %}
 
 {% block body %}
-    <h1>Editer l'API</h1>
+    <section class="container" id="get_serie">
+        <form action="" method="get">
+            <fieldset>
+                <legend>Rechercher l'id d'une série</legend>
 
-    {{ include('api/_form.html.twig', {'button_label': 'Update'}) }}
+                <input type="text" name="search_id" id="search_id" placeholder="ex: Mr Robot, Breaking Bad, ...">
+                <label for="search_id"></label>
 
-    <section class="container-fluid" id="get_data">
-        <h2>Obtenir les dernières données <em>Dernière mise à jour : [date_diff] </em></h2>
+                <button type="submit">Rechercher</button>
+            </fieldset>
+        </form>
+        <br>
+        <form action="" method="get">
+            <fieldset>
+                <legend>Obtenir les détails grâce à l'id</legend>
 
+                <input type="text" name="search_by_id" id="search_by_id" placeholder="ex: tt2021155">
+                <label for="search_by_id"></label>
+
+                <button type="submit">Rechercher</button>
+            </fieldset>
+        </form>
 
         {% if series is defined %}
             <article>
@@ -72,8 +86,4 @@
             </article>
         {% endif %}
     </section>
-
-    <a href="{{ path('api_index') }}">back to list</a>
-
-    {{ include('api/_delete_form.html.twig') }}
 {% endblock %}

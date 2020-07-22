@@ -8,15 +8,15 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  *
- * @Route("/admin", name="admin_")
+ * @Route("/dev", name="dev_")
  *
- * Class AdminController
+ * Class DevController
  * @package App\Controller
  */
-class AdminController extends AbstractController
+class DevController extends AbstractController
 {
     /**
-     * Admin Home Page
+     * Home Page
      *
      * @Route("/", name="index")
      * @return Response
@@ -31,26 +31,6 @@ class AdminController extends AbstractController
 //            throw $this->createNotFoundException('No program found in program\'s table');
 //        }
 
-        return $this->render('admin/index.html.twig');
-    }
-
-    public function manageUsers(): Response
-    {
-        return $this->render('admin/manage_users.html.twig');
-    }
-
-//    public function manageAPI(): Response
-//    {
-//        return $this->render('admin/manage_api.html.twig');
-//    }
-
-    public function showBugReport(): Response
-    {
-        return $this->render('admin/bug_report.html.twig');
-    }
-
-    public function toParamate(): Response
-    {
-        return $this->render('admin/parameters.html.twig');
+        return $this->render('dev/index.html.twig');
     }
 }

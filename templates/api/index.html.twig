@@ -3,10 +3,11 @@
 {% block title %}API index{% endblock %}
 
 {% block body %}
-    <h1>API index</h1>
+    <section class="container-fluid" id="api_index">
+        <h1>API index</h1>
 
-    <table class="table">
-        <thead>
+        <table class="table">
+            <thead>
             <tr>
                 <th>Id</th>
                 <th>Name</th>
@@ -15,27 +16,29 @@
                 <th>Category</th>
                 <th>actions</th>
             </tr>
-        </thead>
-        <tbody>
-        {% for a_p_i in a_p_is %}
-            <tr>
-                <td>{{ a_p_i.id }}</td>
-                <td>{{ a_p_i.name }}</td>
-                <td>{{ a_p_i.description }}</td>
-                <td>{{ a_p_i.url }}</td>
-                <td>{{ a_p_i.category }}</td>
-                <td>
-                    <a href="{{ path('a_p_i_show', {'id': a_p_i.id}) }}">show</a>
-                    <a href="{{ path('a_p_i_edit', {'id': a_p_i.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="6">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            {% for api in apis %}
+                <tr>
+                    <td>{{ api.id }}</td>
+                    <td>{{ api.name }}</td>
+                    <td>{{ api.description }}</td>
+                    <td>{{ api.url }}</td>
+                    <td>{{ api.category }}</td>
+                    <td>
+                        <a href="{{ path('api_show', {'id': api.id}) }}">show</a>
+                        <a href="{{ path('api_edit', {'id': api.id}) }}">edit</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
 
-    <a href="{{ path('a_p_i_new') }}">Create new</a>
+        <a href="{{ path('api_new') }}">Create new</a>
+    </section>
+
 {% endblock %}
