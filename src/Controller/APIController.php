@@ -16,8 +16,17 @@ use App\Entity\Episode;
 use App\Entity\Program;
 use App\Entity\Season;
 use App\Form\APIType;
+use App\Repository\ApiActorRepository;
+use App\Repository\ApiCategoryRepository;
+use App\Repository\ApiCreatorRepository;
+use App\Repository\ApiEpisodeRepository;
+use App\Repository\ApiProgramRepository;
 use App\Repository\APIRepository;
+use App\Repository\ApiSeasonRepository;
+use App\Services\apiManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -130,14 +139,14 @@ class APIController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/dropApiDB", name="drop")
-     *
-     */
-    public function dropApiDB()
-    {
-        $em = $this->getDoctrine()->getManager();
 
+    /**
+     * @Route("/dropDB", name="drop")
+     * @param EntityManagerInterface $em
+     * @return RedirectResponse
+     */
+    public function dropDB(EntityManagerInterface $em):RedirectResponse
+    {
         $repos = $this->getAllApiRepo();
 
         foreach ($repos as $repo => $obj) {
@@ -149,7 +158,6 @@ class APIController extends AbstractController
                 }
             }
         }
-
         $em->flush();
 
         return $this->redirectToRoute('admin_getSerie');
@@ -158,22 +166,22 @@ class APIController extends AbstractController
     /**
      * @Route("/getProgram", name="getProgram")
      *
+     * @param apiManager $apiManager
      * @return Response
      */
-    public function getProgram():Response
+    public function getProgram(apiManager $apiManager):Response
     {
         if (isset($_GET['search_id']))
         {
-            //on nettoie le input -> static function trim/strip/html
-            $search = trim($_GET['search_id']);
+            $search = $apiManager->cleanInput($_GET['search_id']);
             $response = self::getAPIId($search);
+
             return $this->render('admin/getSerie.html.twig', ['series' => $response]);
         }
 
         if (isset($_GET['search_by_id']))
         {
-            //on nettoie le input -> static function trim/strip/html
-            $id = trim($_GET['search_by_id']);
+            $id = $apiManager->cleanInput($_GET['search_by_id']);
 
             $infos = self::getInfosWithAPIId($id);
             $details = self::getAllDetails($id, sizeof($infos->tvSeriesInfo->seasons));
@@ -234,6 +242,7 @@ class APIController extends AbstractController
                 }
             }
             $em->flush();
+
             return $this->render('admin/getSerie.html.twig', ['infos' => $infos, 'details' => $details]);
         }
 
