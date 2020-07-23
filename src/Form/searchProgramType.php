@@ -6,17 +6,17 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class searchApiType extends AbstractType
+class searchProgramType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->setMethod('POST')
-            ->add('search', TextType::class, [
+            ->add('searchSerie', TextType::class, [
                 'attr' =>[
-                    'placeholder' => 'IMDB, Genius, ApiMedic ...'
+                    'placeholder' => 'Mr Robot, Breaking Bad, ...'
                 ],
-                'label' => 'Rechercher une API'])
+                'label' => 'Rechercher une série'])
             ;
     }
 }

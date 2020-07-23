@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\API;
 use App\Entity\Program;
 use App\Form\APIType;
+use App\Form\searchProgramType;
 use App\Repository\APIRepository;
 use App\Repository\ProgramRepository;
 use App\Services\apiManager;
@@ -63,9 +64,22 @@ class APIController extends AbstractController
      * @param EntityManagerInterface $em
      * @return Response
      */
-    public function show(API $api, apiManager $apiManager, ProgramRepository $programRepo, EntityManagerInterface $em): Response
+    public function show(API $api, apiManager $apiManager, ProgramRepository $programRepo, EntityManagerInterface $em, Request $request): Response
     {
         $doctrine = $this->getDoctrine();
+
+        $formSearch = $this->createForm(searchProgramType::class);
+        $formSearch->handleRequest($request);
+
+        if ($formSearch->isSubmitted() && $formSearch->isValid()) {
+            $keyword = $formSearch->get('searchSerie')->getData();
+            $programs = $programRepo->findByKeyword($keyword);
+            dump($programs);
+            die();
+
+            return $this->render('api/index.html.twig', ['apis' => $apis]);
+        }
+
 
         if (isset($_POST['search_id']))
         {
@@ -118,7 +132,7 @@ class APIController extends AbstractController
             }
         }
 
-        return $this->render('api/show.html.twig', ['api' => $api]);
+        return $this->render('api/show.html.twig', ['api' => $api, 'formSearch' => $formSearch->createView()]);
     }
 
     /**

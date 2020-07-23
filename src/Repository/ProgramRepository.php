@@ -19,6 +19,18 @@ class ProgramRepository extends ServiceEntityRepository
         parent::__construct($registry, Program::class);
     }
 
+    public function findByKeyword($keyword): array
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.title like :keyword')
+            ->setParameters([
+                'keyword' =>  '%'. $keyword . '%',
+            ])
+            ->getQuery()
+            ->getArrayResult();
+    }
+
+
     // /**
     //  * @return Program[] Returns an array of Program objects
     //  */
