@@ -28,8 +28,10 @@
         </section>
 
     {% endif %}
-    <section class="container" id="get_program_title">
-        {% if programs is defined %}
+
+    {% if programs is defined %}
+        <section class="container" id="get_program_title">
+
             <h2>Résultat de la recherche</h2>
 
             <article class="row">
@@ -44,8 +46,8 @@
                     Aucune série trouvée
                 {% endfor %}
             </article>
-        {% endif %}
-    </section>
+        </section>
+    {% endif %}
 
 
     {% if is_granted("ROLE_ADMIN") %}
@@ -146,7 +148,7 @@
             {% endif %}
         </section>
         <br><br>
-        <a href="{{ path('api_edit', {'id': api.id}) }}">edit</a>
+        <a href="{{ path('api_edit', {'api': api.id}) }}">edit</a>
     {% endif %}
 
     <section class="container d-flex justify-content-between">

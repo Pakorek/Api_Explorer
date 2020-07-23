@@ -312,7 +312,7 @@ class apiManager
         $this->getEm()->flush();
     }
 
-    public function updateIfNeed($doctrine, $apiId)
+    public function updateIfNeed($apiId)
     {
         $isInDatabase = in_array($apiId, $this->getDoctrine()->getRepository(Program::class)->findAllApiKeys());
 
