@@ -1,0 +1,24 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    <section class="container-fluid">
+        {{ form_start(form) }}
+        {{ form_widget(form.search) }}
+        {{ form_end(form) }}
+    </section>
+
+    <br><br><br><br>
+
+    <section class="container-fluid">
+        <h1>Bienvenue sur API Explorer !</h1>
+        <blockquote>
+            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorum, sapiente.</div>
+            <div>Cupiditate, doloribus nobis odit perferendis saepe sequi sit soluta veniam!</div>
+            <div>Dolor ducimus eius fuga, molestias quidem quis sint sit voluptatibus.</div>
+            <div>Asperiores autem deleniti, dicta ex in quidem! Adipisci, consequuntur nostrum!</div>
+            <div>Beatae cum doloribus eligendi magnam ratione repudiandae veniam veritatis! Expedita!</div>
+        </blockquote>
+    </section>
+
+{% endblock %}
+

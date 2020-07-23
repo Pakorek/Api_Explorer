@@ -1,0 +1,9 @@
+<ul>
+    {% for category in categories %}
+        <li>
+            <a href="{{ path('explorer_show_category', {'categoryName': category}) }}">
+                {{ category }}
+            </a>
+        </li>
+    {% endfor %}
+</ul>

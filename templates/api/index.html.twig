@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}API index{% endblock %}
+
+{% block body %}
+    <section class="container-fluid" id="api_index">
+        <h1>API index</h1>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Description</th>
+                <th>Url</th>
+                <th>Categorie</th>
+                <th>Dernière MaJ</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for api in apis %}
+                <tr>
+                    <td>{{ api.id }}</td>
+                    <td>{{ api.name }}</td>
+                    <td>{{ api.description }}</td>
+                    <td><a href="{{ api.url }}">{{ api.url }}</a></td>
+                    <td>{{ api.category }}</td>
+                    <td>{{ api.updatedAt|date('d/m/Y')}}</td>
+                    <td>
+                        <a href="{{ path('api_show', {'id': api.id}) }}">explorer</a>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <a href="{{ path('api_edit', {'id': api.id}) }}">editer</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('api_new') }}">Create new</a>
+        {% endif %}
+
+    </section>
+
+{% endblock %}
