@@ -47,7 +47,12 @@
                 {% for result in series.results %}
                     <ul>
                         <li>Title : {{ result.title }}</li>
-                        <li>API ID : {{ result.id }}</li>
+                        <li>
+                            API ID : {{ result.id }}
+                            {% if result.id in apisId %}
+                                <span class="badge badge-pill badge-success">Success</span>
+                            {% endif %}
+                        </li>
                     </ul>
                 {% else %}
                     Aucune série trouvée.

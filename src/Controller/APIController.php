@@ -6,6 +6,7 @@ use App\Entity\API;
 use App\Entity\Program;
 use App\Form\APIType;
 use App\Repository\APIRepository;
+use App\Repository\ProgramRepository;
 use App\Services\apiManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -62,14 +63,22 @@ class APIController extends AbstractController
      * @param EntityManagerInterface $em
      * @return Response
      */
-    public function show(API $api, apiManager $apiManager, EntityManagerInterface $em): Response
+    public function show(API $api, apiManager $apiManager, ProgramRepository $programRepo, EntityManagerInterface $em): Response
     {
         $doctrine = $this->getDoctrine();
 
         if (isset($_POST['search_id']))
         {
             $search = $apiManager->cleanInput($_POST['search_id']);
+            //get API id and title
             $response = $apiManager->getAPIId($search, $api->getApiKey());
+            //check if some program already exist in DB
+            //create query builder in Program Repository
+            $programs = $programRepo->findAll();
+            $apisId = [];
+            foreach ($programs as $program) {
+                $apisId[] = $program->getAPIId();
+            }
 
             if (empty($response->results)) {
                 $this->addFlash('info','Aucune série trouvée');
@@ -82,7 +91,7 @@ class APIController extends AbstractController
                 $this->addFlash('success',count($response->results) . ' séries trouvées');
             }
 
-            return $this->render('api/show.html.twig', ['series' => $response, 'api' => $api]);
+            return $this->render('api/show.html.twig', ['series' => $response, 'api' => $api, 'apisId' => $apisId]);
         }
 
         if (isset($_POST['search_by_id'])) {
