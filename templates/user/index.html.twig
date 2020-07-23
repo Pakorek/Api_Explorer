@@ -2,6 +2,14 @@
 
 {% block body %}
     <section class="container-fluid">
+        {{ form_start(form) }}
+        {{ form_widget(form.search) }}
+        {{ form_end(form) }}
+    </section>
+
+    <br><br><br><br>
+
+    <section class="container-fluid">
         <h1>Bienvenue sur API Explorer !</h1>
         <blockquote>
             <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorum, sapiente.</div>
@@ -12,11 +20,5 @@
         </blockquote>
     </section>
 
-    <article class="container">
-        {{ form_start(form) }}
-        {{ form_label(form.search) }}
-        {{ form_widget(form.search) }}
-        {{ form_end(form) }}
-    </article>
 {% endblock %}
 

@@ -15,9 +15,52 @@ use App\Entity\Episode;
 use App\Entity\Program;
 use App\Entity\Season;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 
 class apiManager
 {
+    private $em;
+
+    private $doctrine;
+
+    public function __construct(EntityManagerInterface $em, ManagerRegistry $doctrine)
+    {
+        $this->setEm($em);
+        $this->setDoctrine($doctrine);
+    }
+
+    /**
+     * @param mixed $em
+     */
+    public function setEm($em): void
+    {
+        $this->em = $em;
+    }
+
+    /**
+     * @param mixed $doctrine
+     */
+    public function setDoctrine($doctrine): void
+    {
+        $this->doctrine = $doctrine;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEm()
+    {
+        return $this->em;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDoctrine()
+    {
+        return $this->doctrine;
+    }
+
     public function cleanInput(string $input):string
     {
         $input = trim($input);
@@ -27,15 +70,15 @@ class apiManager
         return $input;
     }
 
-    public function getAllApiRepo($doctrine):array
+    public function getAllApiRepo():array
     {
         return $repos = [
-            'api_program' => $doctrine->getRepository(ApiProgram::class)->findAll(),
-            'api_season' => $doctrine->getRepository(ApiSeason::class)->findAll(),
-            'api_episode' => $doctrine->getRepository(ApiEpisode::class)->findAll(),
-            'api_actor' => $doctrine->getRepository(ApiActor::class)->findAll(),
-            'api_creator' => $doctrine->getRepository(ApiCreator::class)->findAll(),
-            'api_category' => $doctrine->getRepository(ApiCategory::class)->findAll()
+            'api_program' => $this->getDoctrine()->getRepository(ApiProgram::class)->findAll(),
+            'api_season' => $this->getDoctrine()->getRepository(ApiSeason::class)->findAll(),
+            'api_episode' => $this->getDoctrine()->getRepository(ApiEpisode::class)->findAll(),
+            'api_actor' => $this->getDoctrine()->getRepository(ApiActor::class)->findAll(),
+            'api_creator' => $this->getDoctrine()->getRepository(ApiCreator::class)->findAll(),
+            'api_category' => $this->getDoctrine()->getRepository(ApiCategory::class)->findAll()
         ];
     }
 
@@ -116,9 +159,7 @@ class apiManager
         return $details;
     }
 
-
-
-    public function fillApiDB(EntityManagerInterface $em, $infos, $details)
+    public function fillApiDB($infos, $details)
     {
         $program = new ApiProgram();
         $program->setTitle($infos->title);
@@ -130,7 +171,7 @@ class apiManager
         $program->setAwards($infos->awards);
         $program->setNbSeasons(sizeof($infos->tvSeriesInfo->seasons));
         $program->setEndYear(intval($infos->tvSeriesInfo->yearEnd));
-        $em->persist($program);
+        $this->getEm()->persist($program);
 
         foreach ($infos->actorList as $star) {
             $actor = new ApiActor();
@@ -138,20 +179,20 @@ class apiManager
             $actor->setName($star->name);
             $actor->setAsCharacter($star->asCharacter);
             $actor->setImage($star->image);
-            $em->persist($actor);
+            $this->getEm()->persist($actor);
         }
 
         foreach ($infos->tvSeriesInfo->creatorList as $creater) {
             $creator = new ApiCreator();
             $creator->setApiId($creater->id);
             $creator->setFullName($creater->name);
-            $em->persist($creator);
+            $this->getEm()->persist($creator);
         }
 
         foreach ($infos->genreList as $genre) {
             $category = new ApiCategory();
             $category->setName($genre->value);
-            $em->persist($category);
+            $this->getEm()->persist($category);
         }
 
         for ($i=1;$i<=sizeof($infos->tvSeriesInfo->seasons);$i++) {
@@ -159,7 +200,7 @@ class apiManager
             $season->setNumber($i);
             $season->setYear($details["season_$i"]->year);
             $season->setProgram($program);
-            $em->persist($season);
+            $this->getEm()->persist($season);
 
             foreach ($details["season_$i"]->episodes as $episod) {
                 $episode = new ApiEpisode();
@@ -169,13 +210,13 @@ class apiManager
                 $episode->setReleased($episod->released);
                 $episode->setImage($episod->image);
                 $episode->setSeason($season);
-                $em->persist($episode);
+                $this->getEm()->persist($episode);
             }
         }
-        $em->flush();
+        $this->getEm()->flush();
     }
 
-    public function updateBDD(EntityManagerInterface $em, array $repos, $doctrine)
+    public function updateBDD(array $repos)
     {
         $program = new Program();
         $program->setTitle($repos['api_program'][0]->getTitle());
@@ -189,7 +230,7 @@ class apiManager
         $program->setEndYear($repos['api_program'][0]->getEndYear());
 
         foreach ($repos['api_actor'] as $_actor) {
-            $actorExist = $doctrine
+            $actorExist = $this->getDoctrine()
                 ->getRepository(Actor::class)
                 ->findOneBy(['name' => $_actor->getName()]);
 
@@ -197,37 +238,37 @@ class apiManager
                 $actor = new Actor();
                 $actor->setName($_actor->getName());
                 $actor->setImage($_actor->getImage());
-                $em->persist($actor);
+                $this->getEm()->persist($actor);
                 $program->addActor($actor);
             }
         }
 
         foreach ($repos['api_creator'] as $_creator) {
-            $creatorExist = $doctrine
+            $creatorExist = $this->getDoctrine()
                 ->getRepository(Creator::class)
                 ->findOneBy(['fullName' => $_creator->getFullName()]);
 
             if (!$creatorExist) {
                 $creator = new Creator();
                 $creator->setFullName($_creator->getFullName());
-                $em->persist($creator);
+                $this->getEm()->persist($creator);
                 $program->addCreator($creator);
             }
         }
 
         foreach ($repos['api_category'] as $_cat) {
-            $catExist = $doctrine
+            $catExist = $this->getDoctrine()
                 ->getRepository(Category::class)
                 ->findOneBy(['name' => $_cat->getName()]);
 
             if (!$catExist) {
                 $category = new Category();
                 $category->setName($_cat->getName());
-                $em->persist($category);
+                $this->getEm()->persist($category);
                 $program->addCategory($category);
             }
         }
-        $em->persist($program);
+        $this->getEm()->persist($program);
 
         foreach ($repos['api_season'] as $ap_season) {
             $season = new Season();
@@ -246,28 +287,39 @@ class apiManager
                     $episode->setReleased($episod->getReleased());
                     $episode->setSeason($season);
                     $season->addEpisode($episode);
-                    $em->persist($episode);
+                    $this->getEm()->persist($episode);
                 }
             }
-            $em->persist($season);
+            $this->getEm()->persist($season);
         }
-        $em->flush();
+        $this->getEm()->flush();
 
         // Clear API BDD
-        $this->dropApiDB($em, $repos);
+        $this->dropApiDB($repos);
     }
 
-    public function dropApiDB(EntityManagerInterface $em, array $repos)
+    public function dropApiDB(array $repos)
     {
         foreach ($repos as $repo => $obj) {
             if ($repo == 'api_program') {
-                $em->remove($repos['api_program'][0]);
+                $this->getEm()->remove($repos['api_program'][0]);
             } else {
                 foreach ($obj as $object) {
-                    $em->remove($object);
+                    $this->getEm()->remove($object);
                 }
             }
         }
-        $em->flush();
+        $this->getEm()->flush();
+    }
+
+    public function updateIfNeed($doctrine, $apiId)
+    {
+        $isInDatabase = in_array($apiId, $this->getDoctrine()->getRepository(Program::class)->findAllApiKeys());
+
+        if ($isInDatabase) {
+            //check updated at
+        } else {
+            // update
+        }
     }
 }

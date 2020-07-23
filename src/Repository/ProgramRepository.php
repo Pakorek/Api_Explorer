@@ -30,6 +30,14 @@ class ProgramRepository extends ServiceEntityRepository
             ->getArrayResult();
     }
 
+    public function findAllApiKeys()
+    {
+        return $this->createQueryBuilder('p')
+            ->select('p.API_id')
+            ->getQuery()
+            ->getArrayResult();
+    }
+
 
     // /**
     //  * @return Program[] Returns an array of Program objects
