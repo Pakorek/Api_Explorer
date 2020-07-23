@@ -1,0 +1,19 @@
+{% extends "base.html.twig" %}
+
+
+{% block body %}
+    <section class="container" id="wild_category">
+        {#        <h1>Les trois dernières séries de la catégorie {{ programs.0.category.name }} : </h1>#}
+        {% for api in apis %}
+            <div>
+                <h2>{{ api.id }} / {{ api.name }}</h2>
+                <p>{{ api.description }}</p>
+            </div>
+        {% else %}
+            Aucune api trouvée.
+        {% endfor %}
+        <a href="{{ path('explorer_index') }}">
+            Retour à l'accueil
+        </a>
+    </section>
+{% endblock %}
