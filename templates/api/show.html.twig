@@ -3,8 +3,6 @@
 {% block title %}API{% endblock %}
 
 {% block body %}
-    <h1>Bienvenue sur {{ api.name }}</h1>
-
 {#
     <article>
         <h2>Endpoints Disponibles</h2>
@@ -12,21 +10,46 @@
             <li><code></code></li>
             <li><code></code></li>
             <li><code></code></li>
-            <li><code></code></li>
-            <li><code></code></li>
-        </ul>
-    </article>
+            <x
 #}
-    <section class="container-fluid" id="search_serie">
-        {{ form_start(formSearch) }}
-        {{ form_label(formSearch.searchSerie) }}
-        {{ form_widget(formSearch.searchSerie) }}
-        {{ form_end(formSearch) }}
+    {% if formSearch is defined %}
+        <section class="container text-center" id="search_serie">
+            <h1 class="mb-5">Bienvenue sur {{ api.name }}</h1>
+
+
+            {{ form_start(formSearch, {
+                'attr': {
+                    'class': 'form-group',
+                    'novalidate': 'novalidate'
+                }}) }}
+            {{ form_label(formSearch.searchSerie) }}
+            {{ form_widget(formSearch.searchSerie) }}
+            {{ form_end(formSearch) }}
+        </section>
+
+    {% endif %}
+    <section class="container" id="get_program_title">
+        {% if programs is defined %}
+            <h2>Résultat de la recherche</h2>
+
+            <article class="row">
+                {% for result in programs.results %}
+                    <a href="">
+                        <figure class="col-md-4 col-lg-3">
+                            <figcaption>{{ result.title }}</figcaption>
+                            <img src="{{ result.image }}" alt="">
+                        </figure>
+                    </a>
+                {% else %}
+                    Aucune série trouvée
+                {% endfor %}
+            </article>
+        {% endif %}
     </section>
 
 
     {% if is_granted("ROLE_ADMIN") %}
-        <section class="container-fluid" id="get_data">
+        <section class="container" id="get_data">
             <form action="" method="post">
                 <fieldset>
                     <legend>1° Rechercher l'id d'une série</legend>
@@ -126,10 +149,10 @@
         <a href="{{ path('api_edit', {'id': api.id}) }}">edit</a>
     {% endif %}
 
-    <a href="{{ path('api_index') }}">Toutes les APIs</a>
-    <br><br>
-    <a href="{{ path('explorer_index') }}">Retour à l'accueil</a>
-
+    <section class="container d-flex justify-content-between">
+        <a href="{{ path('api_index') }}">Retour aux APIs</a>
+        <a href="{{ path('explorer_index') }}">Retour à l'accueil</a>
+    </section>
 
     {{ include('api/_delete_form.html.twig') }}
 {% endblock %}

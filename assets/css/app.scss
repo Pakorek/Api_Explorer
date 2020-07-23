@@ -29,3 +29,15 @@ th, td {
 h1, h2, h3, h4, h5, h6 {
     color: $purple;
 }
+
+#get_program_title {
+    figure {
+        img {
+            height: 300px;
+        }
+
+        figcaption {
+            text-align: center;
+        }
+    }
+}

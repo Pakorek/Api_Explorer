@@ -68,19 +68,33 @@ class APIController extends AbstractController
     {
         $doctrine = $this->getDoctrine();
 
+        ////////////////////////////////////////////////////////////////////////////// USER SEARCH ////////////////////
         $formSearch = $this->createForm(searchProgramType::class);
         $formSearch->handleRequest($request);
 
         if ($formSearch->isSubmitted() && $formSearch->isValid()) {
             $keyword = $formSearch->get('searchSerie')->getData();
-            $programs = $programRepo->findByKeyword($keyword);
-            dump($programs);
-            die();
+            $programsExist = $programRepo->findByKeyword($keyword);
+//            dump($programs);
+//            die();
+            $search = $apiManager->cleanInput($keyword);
+            //get API id and title
+            $response = $apiManager->getAPIId($search, $api->getApiKey());
 
-            return $this->render('api/index.html.twig', ['apis' => $apis]);
+            return $this->render('api/show.html.twig', [
+                'api' => $api,
+                'programs' => $response,
+                'programsExist' => $programsExist,
+                'formSearch' => $formSearch->createView()
+                ]);
         }
 
+        if (true) {
+            $apiId = '$_POST';
 
+        }
+
+        ////////////////////////////////////////////////////////////////////////////// ADMIN SEARCH ////////////////////
         if (isset($_POST['search_id']))
         {
             $search = $apiManager->cleanInput($_POST['search_id']);

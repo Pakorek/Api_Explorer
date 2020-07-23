@@ -14,7 +14,8 @@ class searchApiType extends AbstractType
             ->setMethod('POST')
             ->add('search', TextType::class, [
                 'attr' =>[
-                    'placeholder' => 'IMDB, Genius, ApiMedic ...'
+                    'placeholder' => 'Rechercher une API : IMDB, Genius, ApiMedic ...',
+                    'class' => "form-control-lg"
                 ],
                 'label' => 'Rechercher une API'])
             ;
