@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New API{% endblock %}
+
+{% block body %}
+    <h1>Ajouter une API</h1>
+
+    {{ include('api/_form.html.twig') }}
+
+    <a href="{{ path('api_index') }}">back to list</a>
+{% endblock %}

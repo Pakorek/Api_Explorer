@@ -23,9 +23,7 @@
                 Catégories
             </button>
             <div class="dropdown-menu">
-{#
-                {{render(controller('App\\Controller\\CategoryController::index'))}}
-#}
+                {{render(controller('App\\Controller\\UserController::showCategories'))}}
             </div>
         </div>
         <li class="nav-item ml-5">

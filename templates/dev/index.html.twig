@@ -1,0 +1,89 @@
+{% extends "base.html.twig" %}
+
+
+{% block body %}
+    <section class="container" id="get_serie">
+        <form action="" method="get">
+            <fieldset>
+                <legend>Rechercher l'id d'une série</legend>
+
+                <input type="text" name="search_id" id="search_id" placeholder="ex: Mr Robot, Breaking Bad, ...">
+                <label for="search_id"></label>
+
+                <button type="submit">Rechercher</button>
+            </fieldset>
+        </form>
+        <br>
+        <form action="" method="get">
+            <fieldset>
+                <legend>Obtenir les détails grâce à l'id</legend>
+
+                <input type="text" name="search_by_id" id="search_by_id" placeholder="ex: tt2021155">
+                <label for="search_by_id"></label>
+
+                <button type="submit">Rechercher</button>
+            </fieldset>
+        </form>
+
+        {% if series is defined %}
+            <article>
+                <h1>Résultats de la recherche d'ID avec "{{ series.expression }}"</h1>
+
+                {% for result in series.results %}
+                    <ul>
+                        <li>Title : {{ result.title }}</li>
+                        <li>API ID : {{ result.id }}</li>
+                    </ul>
+                {% else %}
+                    Aucune série trouvée.
+                {% endfor %}
+            </article>
+        {% endif %}
+
+        <br><br>
+
+        {% if infos is defined %}
+            <article>
+                <h1>Résultats obtenus avec id = {{ infos.id }}</h1>
+                <br>
+                <form action="" method="get">
+                    <input type="hidden" name="update_bdd" value="{{ infos.id }}">
+                    <button type="submit">Envoyer en base</button>
+                </form>
+                <br>
+
+                <ul>
+                    <li><strong>Title : </strong>{{ infos.title }}</li>
+                    <li><strong>Full Title : </strong>{{ infos.fullTitle }}</li>
+                    <li><strong>Year : </strong>{{ infos.year }}</li>
+                    <li><strong>Seasons : </strong>{{ infos.tvSeriesInfo.seasons|length }}</li>
+                    <li><strong>Runtime : </strong>{{ infos.runtimeMins }} minutes</li>
+                    <li><strong>Synopsis : </strong>{{ infos.plot }}</li>
+                    <li><strong>Image : </strong>{{ infos.image }}</li>
+                </ul>
+
+                {% if details is defined %}
+                    <h3>Les saisons en détails</h3>
+                    {% for season in details %}
+                        <ul>
+                            <li><h4>Season {{ loop.index }}</h4></li>
+                            <li>Episodes : {{ season.episodes|length }}</li>
+                            <br>
+                            {% for episode in season.episodes %}
+                                <ul>
+                                    <li><strong>Episode {{ episode.episodeNumber }}</strong></li>
+                                    <li><h6>Title : </h6>{{ episode.title }}</li>
+                                    <li><h6>Released : </h6>{{ episode.released }}</li>
+                                    <li><h6>Synopsis : </h6>{{ episode.plot }}</li>
+                                    <li><h6>Image : </h6>{{ episode.image }}</li>
+                                </ul>
+                                <br>
+                            {% endfor %}
+                        </ul>
+                        <br>
+                    {% endfor %}
+                {% endif %}
+            </article>
+        {% endif %}
+    </section>
+{% endblock %}

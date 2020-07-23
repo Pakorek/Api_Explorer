@@ -19,7 +19,19 @@ class APIRepository extends ServiceEntityRepository
         parent::__construct($registry, API::class);
     }
 
-    // /**
+    public function findByKeyword($keyword): array
+    {
+            return $this->createQueryBuilder('a')
+                ->andWhere('a.name like :keyword')
+                ->setParameters([
+                    'keyword' =>  '%'. $keyword . '%',
+                ])
+                ->getQuery()
+                ->getArrayResult();
+    }
+
+
+        // /**
     //  * @return API[] Returns an array of API objects
     //  */
     /*

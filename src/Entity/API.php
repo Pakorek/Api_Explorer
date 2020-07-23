@@ -4,9 +4,13 @@ namespace App\Entity;
 
 use App\Repository\APIRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
 
 /**
  * @ORM\Entity(repositoryClass=APIRepository::class)
+ * @UniqueEntity(fields={"name"}, message="Une API possède déjà ce nom")
  */
 class API
 {
@@ -36,6 +40,19 @@ class API
      * @ORM\Column(type="string", length=255)
      */
     private $category;
+
+    /**
+     * @var \DateTimeInterface $updatedAt
+     *
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(type="datetime")
+     */
+    private $updatedAt;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $api_key;
 
     public function getId(): ?int
     {
@@ -86,6 +103,30 @@ class API
     public function setCategory(string $category): self
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getApiKey(): ?string
+    {
+        return $this->api_key;
+    }
+
+    public function setApiKey(string $api_key): self
+    {
+        $this->api_key = $api_key;
 
         return $this;
     }
