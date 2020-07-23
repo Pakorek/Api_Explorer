@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Entity\API;
 use App\Entity\Category;
 use App\Entity\Program;
+use App\Form\searchApiType;
 use App\Repository\APIRepository;
 use App\Repository\CategoryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,19 +25,23 @@ class UserController extends AbstractController
      * Home Page
      *
      * @Route("/", name="index")
+     * @param Request $request
+     * @param APIRepository $apiRepo
      * @return Response
      */
-    public function index(): Response
+    public function index(Request $request, APIRepository $apiRepo): Response
     {
-//        $programs = $this->getDoctrine()
-//            ->getRepository(Program::class)
-//            ->findAll();
-//
-//        if (!$programs) {
-//            throw $this->createNotFoundException('No program found in program\'s table');
-//        }
+        $form = $this->createForm(searchApiType::class);
+        $form->handleRequest($request);
 
-        return $this->render('user/index.html.twig');
+        if ($form->isSubmitted() && $form->isValid()) {
+            $keyword = $form->get('search')->getData();
+            $apis = $apiRepo->findByKeyword($keyword);
+
+            return $this->render('api/index.html.twig', ['apis' => $apis]);
+        }
+
+        return $this->render('user/index.html.twig', ['form' => $form->createView()]);
     }
 
     public function showAllApi(): Response
