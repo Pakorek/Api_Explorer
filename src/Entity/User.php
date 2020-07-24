@@ -6,6 +6,8 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
@@ -15,7 +17,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
  * @Vich\Uploadable
  */
-class User implements UserInterface
+class User implements UserInterface, \Serializable
 {
     /**
      * @ORM\Id()
@@ -66,12 +68,13 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @var string|null
      */
     private $image;
 
     /**
      * @Vich\UploadableField(mapping="image_file", fileNameProperty="image")
-     * @var File
+     * @var File|null
      */
     private $imageFile;
 
@@ -79,6 +82,16 @@ class User implements UserInterface
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $updatedAt;
+
+/*    public function __serialize()
+    {
+        return serialize($this->image);
+    }
+
+    public function unserialize($serialized)
+    {
+        $this->id = unserialize($serialized);
+    }*/
 
     public function getId(): ?int
     {
@@ -216,11 +229,12 @@ class User implements UserInterface
     /**
      * @param File|null $image
      * @return User
+     * @throws Exception
      */
-    public function setImageFile(File $image = null): User
+    public function setImageFile(?File $image = null): User
     {
         $this->imageFile = $image;
-        if ($image) {
+        if ($this->imageFile instanceof UploadedFile) {
             $this->updatedAt = new \DateTime('now');
         }
         return $this;
@@ -261,5 +275,27 @@ class User implements UserInterface
         $this->name = $name;
 
         return $this;
+    }
+
+    public function serialize() {
+
+        return serialize([
+            $this->id,
+            $this->name,
+            $this->password,
+            $this->email,
+            $this->isVerified
+        ]);
+    }
+
+    public function unserialize($serialized) {
+
+        list (
+            $this->id,
+            $this->name,
+            $this->password,
+            $this->email,
+            $this->isVerified
+            ) = unserialize($serialized);
     }
 }

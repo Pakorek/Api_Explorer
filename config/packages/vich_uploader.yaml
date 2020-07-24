@@ -7,3 +7,4 @@ vich_uploader:
             uri_prefix: /uploads/image
             # Chemin vers le dossier de stockage
             upload_destination: '%upload_directory%'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
