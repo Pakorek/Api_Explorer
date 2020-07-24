@@ -3,7 +3,7 @@
     <ul class="navbar-nav mr-5">
         {% if app.user is not null %}
             <li class="nav-item">
-                <a class="nav-link" href="">Mon compte</a>
+                <a class="nav-link" href="{{ path('explorer_profil', {'user': app.user.id}) }}">Mon compte</a>
             </li>
         {% else %}
             <li class="nav-item">
