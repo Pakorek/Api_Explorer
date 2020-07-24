@@ -27,6 +27,19 @@
             {{ form_end(formSearch) }}
         </section>
 
+        {% if bugReport is defined %}
+            <section class="container text-center" id="bug_report">
+                {{ form_start(bugReport, {
+                    'attr': {
+                        'class': 'form-group',
+                        'novalidate': 'novalidate'
+                    }}) }}
+                {{ form_label(bugReport.message) }}
+                {{ form_widget(bugReport.message) }}
+                <button type="submit" class="btn btn-lg btn-outline-info">Je préviens le site</button>
+                {{ form_end(bugReport) }}
+            </section>
+        {% endif %}
     {% endif %}
 
     {% if programs is defined %}
