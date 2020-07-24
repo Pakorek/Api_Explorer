@@ -2,8 +2,8 @@ vich_uploader:
     db_driver: orm
 
     mappings:
-        poster_file:
+        image_file:
             # alias qui nous permet d'accéder à nos images depuis le navigateur
-            uri_prefix: /images/posters
+            uri_prefix: /uploads/image
             # Chemin vers le dossier de stockage
             upload_destination: '%upload_directory%'

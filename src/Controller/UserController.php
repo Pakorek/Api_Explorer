@@ -4,10 +4,13 @@ namespace App\Controller;
 use App\Entity\API;
 use App\Entity\Category;
 use App\Entity\Program;
+use App\Entity\User;
 use App\Form\searchApiType;
+use App\Form\UserType;
 use App\Repository\APIRepository;
 use App\Repository\CategoryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -104,6 +107,34 @@ class UserController extends AbstractController
             'apis' => $apis,
         ]);
     }
+
+    /**
+     * @Route("/profil/{user}", name="profil")
+     * @param User $user
+     * @param Request $request
+     * @return RedirectResponse|Response
+     */
+    public function profil(User $user, Request $request)
+    {
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            $this->addFlash('success','Program successfully added !');
+
+            return $this->redirectToRoute('explorer_profil', ['user' => $user]);
+        }
+
+        return $this->render('user/profil.html.twig', [
+            'form' => $form->createView(),
+        ]);
+
+    }
+
 
     public function showAPI(): Response
     {
