@@ -324,9 +324,6 @@ class apiManager
             // fill
             $infos = self::getProgramInfosWithAPIId($apiId, $key);
             $details = self::getAllDetails($apiId, sizeof($infos->tvSeriesInfo->seasons), $key);
-//            dump($infos);
-//            dump($details);
-//            die();
             self::fillApiDB($infos, $details);
             self::updateBDD();
         }
