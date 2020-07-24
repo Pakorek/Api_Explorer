@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}API{% endblock %}
+
+{% block body %}
+
+    {% if program is defined %}
+        {{ dump(program) }}
+    {% endif %}
+
+    <section class="container d-flex justify-content-between">
+        <a href="{{ path('api_index') }}">Retour aux APIs</a>
+        <a href="{{ path('explorer_index') }}">Retour à l'accueil</a>
+    </section>
+    {% if is_granted("ROLE_ADMIN") %}
+        {{ include('api/_delete_form.html.twig') }}
+    {% endif %}
+{% endblock %}

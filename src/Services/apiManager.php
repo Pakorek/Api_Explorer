@@ -216,8 +216,10 @@ class apiManager
         $this->getEm()->flush();
     }
 
-    public function updateBDD(array $repos)
+    public function updateBDD()
     {
+        $repos = self::getAllApiRepo();
+
         $program = new Program();
         $program->setTitle($repos['api_program'][0]->getTitle());
         $program->setApiId($repos['api_program'][0]->getApiId());
@@ -312,14 +314,18 @@ class apiManager
         $this->getEm()->flush();
     }
 
-    public function updateIfNeed($apiId)
+    public function updateIfNeed($apiId, $key)
     {
         $isInDatabase = in_array($apiId, $this->getDoctrine()->getRepository(Program::class)->findAllApiKeys());
-
         if ($isInDatabase) {
-            //check updated at
+            //check updated at with date_diff
+            //update if > n days
         } else {
-            // update
+            // fill
+            $infos = self::getProgramInfosWithAPIId($apiId, $key);
+            $details = self::getAllDetails($apiId, sizeof($infos->tvSeriesInfo->seasons), $key);
+            self::fillApiDB($infos, $details);
+            self::updateBDD();
         }
     }
 }
