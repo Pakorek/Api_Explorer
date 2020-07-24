@@ -13,6 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -93,14 +94,14 @@ class APIController extends AbstractController
 
         if (isset($_POST["get_details"])) {
             $apiId = $_POST["get_details"];
-            $apiManager->updateIfNeed($apiId);
+            $apiManager->updateIfNeed($apiId, $api->getApiKey());
             $program = $programRepo->findOneBy(['API_id' => $apiId]);
 
-            if (!$program) {
-                $this->addFlash('error', 'Oups ! Une erreur s\'est produite, veuillez recommencer svp');
-            }
-
-
+            return $this->render('api/api_show_program.html.twig', [
+                'api' => $api,
+                'program' => $program,
+                'formSearch' => $formSearch->createView()
+            ]);
         }
 
         ////////////////////////////////////////////////////////////////////////////// ADMIN SEARCH ////////////////////
@@ -148,7 +149,7 @@ class APIController extends AbstractController
                 ->getRepository(Program::class)
                 ->findOneBy(['title' => $repos['api_program'][0]->getTitle()]);
             if (!$programExist) {
-                $apiManager->updateBDD($repos);
+                $apiManager->updateBDD();
                 $this->addFlash('success', 'Tous les détails du programme sont désormais dans la base de donnée');
             } else {
                 $this->addFlash('success', 'Les données relatives au programme ont été mises à jour ');
@@ -159,14 +160,14 @@ class APIController extends AbstractController
     }
 
     /**
-     * @Route("/{api}/{title}", name="show_program", methods={"GET","POST"})
+     * @Route("/{api}", name="show_program", methods={"GET","POST"})
      * @param API $api
      * @param Program $program
      * @return Response
      */
     public function showProgram(API $api, Program $program)
     {
-        return $this->render('api/IMDB/show.html.twig', ['program' => $program]);
+        return $this->render('api/IMDB/show.html.twig', ['api' => $api, 'program' => $program]);
     }
 
     /**
