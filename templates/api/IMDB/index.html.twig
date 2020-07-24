@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}API {{ api.name }}{% endblock %}
+
+{% block body %}
+    {% if formSearch is defined %}
+        <section class="container text-center" id="search_serie">
+            <h1 class="mb-5">Bienvenue sur {{ api.name }}</h1>
+
+            {{ form_start(formSearch, {
+                'attr': {
+                    'class': 'form-group',
+                    'novalidate': 'novalidate'
+                }})
+            }}
+            {{ form_label(formSearch.searchSerie) }}
+            {{ form_widget(formSearch.searchSerie) }}
+            {{ form_end(formSearch) }}
+        </section>
+    {% endif %}
+
+    {% if programs is defined %}
+        <section class="container" id="get_program_title">
+
+            <h2>Résultat de la recherche</h2>
+
+            <article class="row">
+                {{ dump(programs) }}
+                {% for result in programs.results %}
+                    <a href="{{ path('api_show_program', {'api': api.id, 'title': result.title}) }}">
+                        <figure class="col-md-4 col-lg-3">
+                            <figcaption>{{ result.title }}</figcaption>
+                            <img src="{{ result.image }}" alt="">
+                        </figure>
+                    </a>
+                {% else %}
+                    Aucune série trouvée
+                {% endfor %}
+            </article>
+        </section>
+    {% endif %}
+
+
+{% endblock %}
