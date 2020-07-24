@@ -6,6 +6,14 @@
 
     {% if program is defined %}
         {{ dump(program) }}
+
+        {% for season in program.seasons %}
+            {{ dump(season) }}
+
+            {% for episode in season.episodes  %}
+                {{ dump(episode) }}
+            {% endfor %}
+        {% endfor %}
     {% endif %}
 
     <section class="container d-flex justify-content-between">
