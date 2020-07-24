@@ -32,10 +32,15 @@ class ProgramRepository extends ServiceEntityRepository
 
     public function findAllApiKeys()
     {
-        return $this->createQueryBuilder('p')
-            ->select('p.API_id')
-            ->getQuery()
-            ->getArrayResult();
+        $em = $this->getEntityManager();
+        $query = $em->createQuery('SELECT p.API_id FROM App\Entity\Program p');
+
+        $assoc = $query->execute();
+        $keys = [];
+        foreach ($assoc as $result) {
+            $keys[] = $result['API_id'];
+        }
+        return $keys;
     }
 
 
