@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\API;
 use App\Entity\Program;
 use App\Form\APIType;
+use App\Form\BugReportType;
 use App\Form\searchProgramType;
 use App\Repository\APIRepository;
 use App\Repository\ProgramRepository;
@@ -75,19 +76,29 @@ class APIController extends AbstractController
         $formSearch = $this->createForm(searchProgramType::class);
         $formSearch->handleRequest($request);
 
+        $bugReport = $this->createForm(BugReportType::class);
+        $bugReport->handleRequest($request);
+
+        //get API id, title and image with keyword
         if ($formSearch->isSubmitted() && $formSearch->isValid()) {
             $keyword = $formSearch->get('searchSerie')->getData();
             $programsExist = $programRepo->findByKeyword($keyword);
-//            dump($programs);
-//            die();
             $search = $apiManager->cleanInput($keyword);
-            //get API id, title and image
             $response = $apiManager->getAPIId($search, $api->getApiKey());
 
             return $this->render('api/IMDB/index.html.twig', [
                 'api' => $api,
                 'programs' => $response,
                 'programsExist' => $programsExist,
+                'formSearch' => $formSearch->createView()
+                ]);
+        }
+
+        //contact admin - bug report
+        if ($bugReport->isSubmitted() && $bugReport->isValid()) {
+
+            return $this->render('api/IMDB/index.html.twig', [
+                'api' => $api,
                 'formSearch' => $formSearch->createView()
                 ]);
         }
@@ -156,7 +167,11 @@ class APIController extends AbstractController
             }
         }
 
-        return $this->render('api/show.html.twig', ['api' => $api, 'formSearch' => $formSearch->createView()]);
+        return $this->render('api/show.html.twig', [
+            'api' => $api,
+            'formSearch' => $formSearch->createView(),
+//            'bugReport' => $bugReport->createView()
+        ]);
     }
 
     /**

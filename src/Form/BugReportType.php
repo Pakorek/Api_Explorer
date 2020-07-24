@@ -13,7 +13,12 @@ class BugReportType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('message', TextareaType::class)
+            ->add('message', TextareaType::class, [
+//                'attr' =>[
+//                    'placeholder' => 'Rechercher une API : IMDB, Genius, ApiMedic ...',
+//                    'class' => "form-control-lg"
+//                ],
+                'label' => 'Un problème est survenu ?'])
         ;
     }
 
