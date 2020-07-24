@@ -26,9 +26,11 @@
                 {{render(controller('App\\Controller\\UserController::showCategories'))}}
             </div>
         </div>
-        <li class="nav-item ml-5">
-            <a class="nav-link" href="#">Empty</a>
-        </li>
+        {% if app.user %}
+            <li class="nav-item ml-5">
+                <a class="nav-link" href="/logout">Déconnexion</a>
+            </li>
+        {% endif %}
     </ul>
 
 </nav>
