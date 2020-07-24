@@ -6,22 +6,38 @@
         <article class="row">
             <div class="col-md-3 col-lg-2 hasImage">
                 {% if not app.user.image %}
-                    <div class="no_image"><p>{{ app.user.username|first|upper}}</p></div>
+                    <div class="no_image"><p>{{ app.user.name|first|upper}}</p></div>
                 {% else %}
                     <img src="/uploads/{{ app.user.image }}" alt="photo" class="rounded-circle">
                 {% endif %}
             </div>
             <div class="col-md-8">
                 <div>
-                    <h3>{{ app.user.username }}</h3>
+                    <h3>{{ app.user.name }}</h3>
                     <h6>{{ app.user.email }}</h6>
+                    <p class="dropdown-item" data-toggle="modal" data-target="#profilModal">Editer profil</p>
                 </div>
             </div>
         </article>
 
-        {{ form_start(form) }}
-        {{ form_widget(form.imageFile) }}
-        {{ form_end(form) }}
+        <div class="modal fade" id="profilModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Editer mon profil</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        {{ form_start(form) }}
+                        {{ form_widget(form.imageFile) }}
+                        <button type="submit">Editer</button>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </section>
 {% endblock %}
