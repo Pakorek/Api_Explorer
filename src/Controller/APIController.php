@@ -58,10 +58,12 @@ class APIController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="show", methods={"GET","POST"})
+     * @Route("/{api}", name="show", methods={"GET","POST"})
      * @param API $api
      * @param apiManager $apiManager
+     * @param ProgramRepository $programRepo
      * @param EntityManagerInterface $em
+     * @param Request $request
      * @return Response
      */
     public function show(API $api, apiManager $apiManager, ProgramRepository $programRepo, EntityManagerInterface $em, Request $request): Response
@@ -78,10 +80,10 @@ class APIController extends AbstractController
 //            dump($programs);
 //            die();
             $search = $apiManager->cleanInput($keyword);
-            //get API id and title
+            //get API id, title and image
             $response = $apiManager->getAPIId($search, $api->getApiKey());
 
-            return $this->render('api/show.html.twig', [
+            return $this->render('api/IMDB/index.html.twig', [
                 'api' => $api,
                 'programs' => $response,
                 'programsExist' => $programsExist,
@@ -89,8 +91,15 @@ class APIController extends AbstractController
                 ]);
         }
 
-        if (true) {
-            $apiId = '$_POST';
+        if (isset($_POST["get_details"])) {
+            $apiId = $_POST["get_details"];
+            $apiManager->updateIfNeed($apiId);
+            $program = $programRepo->findOneBy(['API_id' => $apiId]);
+
+            if (!$program) {
+                $this->addFlash('error', 'Oups ! Une erreur s\'est produite, veuillez recommencer svp');
+            }
+
 
         }
 
@@ -128,18 +137,18 @@ class APIController extends AbstractController
             $details = $apiManager->getAllDetails($id, sizeof($infos->tvSeriesInfo->seasons), $api->getApiKey());
 
             // MaJ BDD API - loops on seasons
-            $apiManager->fillApiDB($em, $infos, $details);
+            $apiManager->fillApiDB($infos, $details);
 
             return $this->render('api/show.html.twig', ['infos' => $infos, 'details' => $details, 'api' => $api]);
         }
 
         if (isset($_POST['update_bdd'])) {
-            $repos = $apiManager->getAllApiRepo($doctrine);
+            $repos = $apiManager->getAllApiRepo();
             $programExist = $doctrine
                 ->getRepository(Program::class)
                 ->findOneBy(['title' => $repos['api_program'][0]->getTitle()]);
             if (!$programExist) {
-                $apiManager->updateBDD($em, $repos, $doctrine);
+                $apiManager->updateBDD($repos);
                 $this->addFlash('success', 'Tous les détails du programme sont désormais dans la base de donnée');
             } else {
                 $this->addFlash('success', 'Les données relatives au programme ont été mises à jour ');
@@ -147,6 +156,17 @@ class APIController extends AbstractController
         }
 
         return $this->render('api/show.html.twig', ['api' => $api, 'formSearch' => $formSearch->createView()]);
+    }
+
+    /**
+     * @Route("/{api}/{title}", name="show_program", methods={"GET","POST"})
+     * @param API $api
+     * @param Program $program
+     * @return Response
+     */
+    public function showProgram(API $api, Program $program)
+    {
+        return $this->render('api/IMDB/show.html.twig', ['program' => $program]);
     }
 
     /**
