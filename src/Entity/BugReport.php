@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\BugReportRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=BugReportRepository::class)
@@ -19,6 +20,7 @@ class BugReport
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\NotBlank(message="Mmmh, un message sans message ?")
      */
     private $message;
 
