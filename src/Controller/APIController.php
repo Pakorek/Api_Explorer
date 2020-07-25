@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\API;
 use App\Entity\Program;
 use App\Form\APIType;
+use App\Form\BugReportType;
 use App\Form\searchProgramType;
 use App\Repository\APIRepository;
 use App\Repository\ProgramRepository;
@@ -13,6 +14,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -74,13 +76,14 @@ class APIController extends AbstractController
         $formSearch = $this->createForm(searchProgramType::class);
         $formSearch->handleRequest($request);
 
+        $bugReport = $this->createForm(BugReportType::class);
+        $bugReport->handleRequest($request);
+
+        //get API id, title and image with keyword
         if ($formSearch->isSubmitted() && $formSearch->isValid()) {
             $keyword = $formSearch->get('searchSerie')->getData();
             $programsExist = $programRepo->findByKeyword($keyword);
-//            dump($programs);
-//            die();
             $search = $apiManager->cleanInput($keyword);
-            //get API id, title and image
             $response = $apiManager->getAPIId($search, $api->getApiKey());
 
             return $this->render('api/IMDB/index.html.twig', [
@@ -91,16 +94,25 @@ class APIController extends AbstractController
                 ]);
         }
 
+        //contact admin - bug report
+        if ($bugReport->isSubmitted() && $bugReport->isValid()) {
+
+            return $this->render('api/IMDB/index.html.twig', [
+                'api' => $api,
+                'formSearch' => $formSearch->createView()
+                ]);
+        }
+
         if (isset($_POST["get_details"])) {
             $apiId = $_POST["get_details"];
-            $apiManager->updateIfNeed($apiId);
+            $apiManager->updateIfNeed($apiId, $api->getApiKey());
             $program = $programRepo->findOneBy(['API_id' => $apiId]);
 
-            if (!$program) {
-                $this->addFlash('error', 'Oups ! Une erreur s\'est produite, veuillez recommencer svp');
-            }
-
-
+            return $this->render('api/api_show_program.html.twig', [
+                'api' => $api,
+                'program' => $program,
+                'formSearch' => $formSearch->createView()
+            ]);
         }
 
         ////////////////////////////////////////////////////////////////////////////// ADMIN SEARCH ////////////////////
@@ -148,25 +160,29 @@ class APIController extends AbstractController
                 ->getRepository(Program::class)
                 ->findOneBy(['title' => $repos['api_program'][0]->getTitle()]);
             if (!$programExist) {
-                $apiManager->updateBDD($repos);
+                $apiManager->updateBDD();
                 $this->addFlash('success', 'Tous les détails du programme sont désormais dans la base de donnée');
             } else {
                 $this->addFlash('success', 'Les données relatives au programme ont été mises à jour ');
             }
         }
 
-        return $this->render('api/show.html.twig', ['api' => $api, 'formSearch' => $formSearch->createView()]);
+        return $this->render('api/show.html.twig', [
+            'api' => $api,
+            'formSearch' => $formSearch->createView(),
+//            'bugReport' => $bugReport->createView()
+        ]);
     }
 
     /**
-     * @Route("/{api}/{title}", name="show_program", methods={"GET","POST"})
+     * @Route("/{api}", name="show_program", methods={"GET","POST"})
      * @param API $api
      * @param Program $program
      * @return Response
      */
     public function showProgram(API $api, Program $program)
     {
-        return $this->render('api/IMDB/show.html.twig', ['program' => $program]);
+        return $this->render('api/IMDB/show.html.twig', ['api' => $api, 'program' => $program]);
     }
 
     /**
