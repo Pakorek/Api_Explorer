@@ -30,7 +30,7 @@
                     <td>
                         <a href="{{ path('api_show', {'api': api.id}) }}">explorer</a>
                         {% if is_granted('ROLE_ADMIN') %}
-                            <a href="{{ path('api_edit', {'id': api.id}) }}">editer</a>
+                            <a href="{{ path('api_edit', {'api': api.id}) }}">editer</a>
                         {% endif %}
                     </td>
                 </tr>
