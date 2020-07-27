@@ -1,0 +1,9 @@
+{{ form_start(bugReport, {
+    'attr': {
+        'class': 'form-group',
+        'novalidate': 'novalidate'
+    }}) }}
+    {{ form_label(bugReport.message) }}
+    {{ form_widget(bugReport.message) }}
+    <button type="submit" class="btn btn-lg btn-outline-info">Je préviens le site</button>
+{{ form_end(bugReport) }}
