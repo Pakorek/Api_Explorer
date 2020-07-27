@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\IMDB;
 
 use App\Repository\EpisodeRepository;
 use Doctrine\ORM\Mapping as ORM;

@@ -27,6 +27,11 @@
             {{ form_end(formSearch) }}
         </section>
 
+        {% if bugReport is defined %}
+            <section class="container text-center" id="bug_report">
+                {% include '_bug_report_form.html.twig' %}
+            </section>
+        {% endif %}
     {% endif %}
 
     {% if programs is defined %}
@@ -50,111 +55,8 @@
     {% endif %}
 
 
-    {% if is_granted("ROLE_ADMIN") %}
-        <section class="container" id="get_data">
-            <form action="" method="post">
-                <fieldset>
-                    <legend>1° Rechercher l'id d'une série</legend>
-
-                    <input type="text" name="search_id" id="search_id" placeholder="ex: Mr Robot, Breaking Bad, ...">
-                    <label for="search_id"></label>
-
-                    <button type="submit">Rechercher</button>
-                </fieldset>
-            </form>
-            <br>
-
-            {#
-                    <div>
-                        <form method="post" novalidate>
-                            <input type="hidden" name="get_last_data" value="">
-                            <button type="submit" class="btn btn-outline-light text-dark">Obtenir les dernières données (API)</button>
-                        </form>
-                        <em>Dernière mise à jour : {{ api.updatedAt|date('d/m/Y') }} </em>
-                    </div>
-            #}
-            {% if series is defined %}
-                <article>
-                    {% for result in series.results %}
-                        <ul>
-                            <li>Title : {{ result.title }}</li>
-                            <li>
-                                API ID : {{ result.id }}
-                                {% if result.id in apisId %}
-                                    <span class="badge badge-pill badge-success">Success</span>
-                                {% endif %}
-                            </li>
-                        </ul>
-                    {% else %}
-                        Aucune série trouvée.
-                    {% endfor %}
-                </article>
-
-                <form method="post">
-                    <fieldset>
-                        <legend>2° Obtenir les détails grâce à l'id</legend>
-
-                        <input type="text" name="search_by_id" id="search_by_id" placeholder="ex: tt2021155">
-                        <label for="search_by_id"></label>
-
-                        <button type="submit">Rechercher</button>
-                    </fieldset>
-                </form>
-            {% endif %}
-
-
-            {% if infos is defined %}
-                <article>
-                    <h1>Résultats obtenus</h1>
-
-                    <ul>
-                        <li><strong>Title : </strong>{{ infos.title }}</li>
-                        <li><strong>Full Title : </strong>{{ infos.fullTitle }}</li>
-                        <li><strong>Year : </strong>{{ infos.year }}</li>
-                        <li><strong>Seasons : </strong>{{ infos.tvSeriesInfo.seasons|length }}</li>
-                        <li><strong>Runtime : </strong>{{ infos.runtimeMins }} minutes</li>
-                        <li><strong>Synopsis : </strong>{{ infos.plot }}</li>
-                        <li><strong>Image : </strong>{{ infos.image }}</li>
-                    </ul>
-
-                    <form method="post">
-                        <input type="hidden" name="update_bdd" value="{{ infos.id }}">
-                        <button type="submit" class="btn btn-outline-light text-dark">3° Envoyer dans la BDD</button>
-                    </form>
-
-
-                    {% if details is defined %}
-                        <h3>Les saisons en détails</h3>
-                        {% for season in details %}
-                            <ul>
-                                <li><h4>Season {{ loop.index }}</h4></li>
-                                <li>Episodes : {{ season.episodes|length }}</li>
-                                <br>
-                                {% for episode in season.episodes %}
-                                    <ul>
-                                        <li><strong>Episode {{ episode.episodeNumber }}</strong></li>
-                                        <li><h6>Title : </h6>{{ episode.title }}</li>
-                                        <li><h6>Released : </h6>{{ episode.released }}</li>
-                                        <li><h6>Synopsis : </h6>{{ episode.plot }}</li>
-                                        <li><h6>Image : </h6>{{ episode.image }}</li>
-                                    </ul>
-                                    <br>
-                                {% endfor %}
-                            </ul>
-                            <br>
-                        {% endfor %}
-                    {% endif %}
-                </article>
-            {% endif %}
-        </section>
-        <br><br>
-        <a href="{{ path('api_edit', {'api': api.id}) }}">edit</a>
-    {% endif %}
-
     <section class="container d-flex justify-content-between">
         <a href="{{ path('api_index') }}">Retour aux APIs</a>
         <a href="{{ path('explorer_index') }}">Retour à l'accueil</a>
     </section>
-
-    {{ include('api/_delete_form.html.twig') }}
 {% endblock %}

@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\IMDB;
 
-use App\Repository\ApiActorRepository;
+use App\Repository\ActorRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=ApiActorRepository::class)
+ * @ORM\Entity(repositoryClass=ActorRepository::class)
  */
-class ApiActor
+class Actor
 {
     /**
      * @ORM\Id()
@@ -22,27 +22,17 @@ class ApiActor
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $api_id;
+    private $name;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\ManyToMany(targetEntity=Program::class, inversedBy="actors")
      */
-    private $name;
+    private $programs;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $birth_date;
-
-    /**
-     * @ORM\ManyToMany(targetEntity=ApiProgram::class, inversedBy="apiActors")
-     */
-    private $programs;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $asCharacter;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -59,18 +49,6 @@ class ApiActor
         return $this->id;
     }
 
-    public function getApiId(): ?string
-    {
-        return $this->api_id;
-    }
-
-    public function setApiId(string $api_id): self
-    {
-        $this->api_id = $api_id;
-
-        return $this;
-    }
-
     public function getName(): ?string
     {
         return $this->name;
@@ -83,27 +61,15 @@ class ApiActor
         return $this;
     }
 
-    public function getBirthDate(): ?\DateTimeInterface
-    {
-        return $this->birth_date;
-    }
-
-    public function setBirthDate(\DateTimeInterface $birth_date): self
-    {
-        $this->birth_date = $birth_date;
-
-        return $this;
-    }
-
     /**
-     * @return Collection|ApiProgram[]
+     * @return Collection|Program[]
      */
     public function getPrograms(): Collection
     {
         return $this->programs;
     }
 
-    public function addProgram(ApiProgram $program): self
+    public function addProgram(Program $program): self
     {
         if (!$this->programs->contains($program)) {
             $this->programs[] = $program;
@@ -112,7 +78,7 @@ class ApiActor
         return $this;
     }
 
-    public function removeProgram(ApiProgram $program): self
+    public function removeProgram(Program $program): self
     {
         if ($this->programs->contains($program)) {
             $this->programs->removeElement($program);
@@ -121,14 +87,14 @@ class ApiActor
         return $this;
     }
 
-    public function getAsCharacter(): ?string
+    public function getBirthDate(): ?\DateTimeInterface
     {
-        return $this->asCharacter;
+        return $this->birth_date;
     }
 
-    public function setAsCharacter(string $asCharacter): self
+    public function setBirthDate(?\DateTimeInterface $birth_date): self
     {
-        $this->asCharacter = $asCharacter;
+        $this->birth_date = $birth_date;
 
         return $this;
     }

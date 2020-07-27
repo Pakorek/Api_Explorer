@@ -3,10 +3,9 @@
 
 {% block body %}
     <section class="container" id="wild_category">
-        {#        <h1>Les trois dernières séries de la catégorie {{ programs.0.category.name }} : </h1>#}
         {% for api in apis %}
             <div>
-                <h2>{{ loop.index }} / {{ api.name }} <a href="{{ path('api_show', {'id': api.id}) }}">+</a></h2>
+                <h2>{{ loop.index }} / {{ api.name }} <a href="{{ path('api_show', {'api': api.id}) }}">+</a></h2>
                 <p>{{ api.description }}</p>
             </div>
         {% else %}

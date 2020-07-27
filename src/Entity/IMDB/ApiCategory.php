@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\IMDB;
 
-use App\Repository\CategoryRepository;
+use App\Repository\ApiCategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=CategoryRepository::class)
+ * @ORM\Entity(repositoryClass=ApiCategoryRepository::class)
  */
-class Category
+class ApiCategory
 {
     /**
      * @ORM\Id()
@@ -25,7 +25,7 @@ class Category
     private $name;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Program::class, inversedBy="categories")
+     * @ORM\ManyToMany(targetEntity=ApiProgram::class, inversedBy="apiCategories")
      */
     private $programs;
 
@@ -52,14 +52,14 @@ class Category
     }
 
     /**
-     * @return Collection|Program[]
+     * @return Collection|ApiProgram[]
      */
     public function getPrograms(): Collection
     {
         return $this->programs;
     }
 
-    public function addProgram(Program $program): self
+    public function addProgram(ApiProgram $program): self
     {
         if (!$this->programs->contains($program)) {
             $this->programs[] = $program;
@@ -68,7 +68,7 @@ class Category
         return $this;
     }
 
-    public function removeProgram(Program $program): self
+    public function removeProgram(ApiProgram $program): self
     {
         if ($this->programs->contains($program)) {
             $this->programs->removeElement($program);
