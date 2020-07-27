@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Repository;
+namespace App\Repository\IMDB;
 
-use App\Entity\Program;
+use App\Entity\IMDB\Program;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -33,7 +33,7 @@ class ProgramRepository extends ServiceEntityRepository
     public function findAllApiKeys()
     {
         $em = $this->getEntityManager();
-        $query = $em->createQuery('SELECT p.API_id FROM App\Entity\Program p');
+        $query = $em->createQuery('SELECT p.API_id FROM App\Entity\IMDB\Program p');
 
         $assoc = $query->execute();
         $keys = [];

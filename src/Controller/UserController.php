@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 
+use App\Entity\API;
 use App\Entity\User;
 use App\Form\searchApiType;
 use App\Form\UserType;
@@ -60,6 +61,23 @@ class UserController extends AbstractController
 
         return $this->render('fragments/_categories.html.twig', [
             'categories' => $categories,
+        ]);
+    }
+
+    /**
+     * @Route("/category/{categoryName<^[a-zA-Z-]+$>?null}", name="show_category")
+     *
+     * @param string $categoryName
+     * @return Response
+     */
+    public function showByCategory(string $categoryName):Response
+    {
+        $apis = $this->getDoctrine()
+            ->getRepository(API::class)
+            ->findBy(['category' => $categoryName], ['name' => 'ASC']);
+
+        return $this->render('user/show_by_category.html.twig', [
+            'apis' => $apis,
         ]);
     }
 
