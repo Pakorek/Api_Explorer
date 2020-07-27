@@ -1,26 +1,26 @@
 <?php
 
-namespace App\Repository;
+namespace App\Repository\IMDB;
 
-use App\Entity\Actor;
+use App\Entity\IMDB\ApiActor;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method Actor|null find($id, $lockMode = null, $lockVersion = null)
- * @method Actor|null findOneBy(array $criteria, array $orderBy = null)
- * @method Actor[]    findAll()
- * @method Actor[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method ApiActor|null find($id, $lockMode = null, $lockVersion = null)
+ * @method ApiActor|null findOneBy(array $criteria, array $orderBy = null)
+ * @method ApiActor[]    findAll()
+ * @method ApiActor[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ActorRepository extends ServiceEntityRepository
+class ApiActorRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Actor::class);
+        parent::__construct($registry, ApiActor::class);
     }
 
     // /**
-    //  * @return Actor[] Returns an array of Actor objects
+    //  * @return ApiActor[] Returns an array of ApiActor objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class ActorRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?Actor
+    public function findOneBySomeField($value): ?ApiActor
     {
         return $this->createQueryBuilder('a')
             ->andWhere('a.exampleField = :val')

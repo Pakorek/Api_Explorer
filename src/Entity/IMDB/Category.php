@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\IMDB;
 
-use App\Repository\ApiCreatorRepository;
+use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=ApiCreatorRepository::class)
+ * @ORM\Entity(repositoryClass=CategoryRepository::class)
  */
-class ApiCreator
+class Category
 {
     /**
      * @ORM\Id()
@@ -22,15 +22,10 @@ class ApiCreator
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $api_id;
+    private $name;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $full_name;
-
-    /**
-     * @ORM\ManyToMany(targetEntity=ApiProgram::class, inversedBy="apiCreators")
+     * @ORM\ManyToMany(targetEntity=Program::class, inversedBy="categories")
      */
     private $programs;
 
@@ -44,39 +39,27 @@ class ApiCreator
         return $this->id;
     }
 
-    public function getApiId(): ?string
+    public function getName(): ?string
     {
-        return $this->api_id;
+        return $this->name;
     }
 
-    public function setApiId(string $api_id): self
+    public function setName(string $name): self
     {
-        $this->api_id = $api_id;
-
-        return $this;
-    }
-
-    public function getFullName(): ?string
-    {
-        return $this->full_name;
-    }
-
-    public function setFullName(string $full_name): self
-    {
-        $this->full_name = $full_name;
+        $this->name = $name;
 
         return $this;
     }
 
     /**
-     * @return Collection|ApiProgram[]
+     * @return Collection|Program[]
      */
     public function getPrograms(): Collection
     {
         return $this->programs;
     }
 
-    public function addProgram(ApiProgram $program): self
+    public function addProgram(Program $program): self
     {
         if (!$this->programs->contains($program)) {
             $this->programs[] = $program;
@@ -85,7 +68,7 @@ class ApiCreator
         return $this;
     }
 
-    public function removeProgram(ApiProgram $program): self
+    public function removeProgram(Program $program): self
     {
         if ($this->programs->contains($program)) {
             $this->programs->removeElement($program);

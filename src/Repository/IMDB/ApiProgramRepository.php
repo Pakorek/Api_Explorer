@@ -1,26 +1,26 @@
 <?php
 
-namespace App\Repository;
+namespace App\Repository\IMDB;
 
-use App\Entity\ApiEpisode;
+use App\Entity\IMDB\ApiProgram;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method ApiEpisode|null find($id, $lockMode = null, $lockVersion = null)
- * @method ApiEpisode|null findOneBy(array $criteria, array $orderBy = null)
- * @method ApiEpisode[]    findAll()
- * @method ApiEpisode[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method ApiProgram|null find($id, $lockMode = null, $lockVersion = null)
+ * @method ApiProgram|null findOneBy(array $criteria, array $orderBy = null)
+ * @method ApiProgram[]    findAll()
+ * @method ApiProgram[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ApiEpisodeRepository extends ServiceEntityRepository
+class ApiProgramRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, ApiEpisode::class);
+        parent::__construct($registry, ApiProgram::class);
     }
 
     // /**
-    //  * @return ApiEpisode[] Returns an array of ApiEpisode objects
+    //  * @return ApiProgram[] Returns an array of ApiProgram objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class ApiEpisodeRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?ApiEpisode
+    public function findOneBySomeField($value): ?ApiProgram
     {
         return $this->createQueryBuilder('a')
             ->andWhere('a.exampleField = :val')
