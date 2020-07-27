@@ -9,7 +9,6 @@
         <table class="table">
             <thead>
             <tr>
-                <th>Id</th>
                 <th>Nom</th>
                 <th>Description</th>
                 <th>Url</th>
@@ -21,7 +20,6 @@
             <tbody>
             {% for api in apis %}
                 <tr>
-                    <td>{{ api.id }}</td>
                     <td>{{ api.name }}</td>
                     <td>{{ api.description }}</td>
                     <td><a href="{{ api.url }}">{{ api.url }}</a></td>

@@ -53,7 +53,7 @@ class APIController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="edit", methods={"GET","POST"})
+     * @Route("/{api}/edit", name="edit", methods={"GET","POST"})
      * @param Request $request
      * @param API $api
      * @return Response
