@@ -1,26 +1,26 @@
 <?php
 
-namespace App\Repository;
+namespace App\Repository\IMDB;
 
-use App\Entity\ApiSeason;
+use App\Entity\IMDB\Actor;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method ApiSeason|null find($id, $lockMode = null, $lockVersion = null)
- * @method ApiSeason|null findOneBy(array $criteria, array $orderBy = null)
- * @method ApiSeason[]    findAll()
- * @method ApiSeason[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Actor|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Actor|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Actor[]    findAll()
+ * @method Actor[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ApiSeasonRepository extends ServiceEntityRepository
+class ActorRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, ApiSeason::class);
+        parent::__construct($registry, Actor::class);
     }
 
     // /**
-    //  * @return ApiSeason[] Returns an array of ApiSeason objects
+    //  * @return Actor[] Returns an array of Actor objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class ApiSeasonRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?ApiSeason
+    public function findOneBySomeField($value): ?Actor
     {
         return $this->createQueryBuilder('a')
             ->andWhere('a.exampleField = :val')

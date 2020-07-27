@@ -28,7 +28,7 @@
                     <td>{{ api.category }}</td>
                     <td>{{ api.updatedAt|date('d/m/Y')}}</td>
                     <td>
-                        <a href="{{ path('api_show', {'api': api.id}) }}">explorer</a>
+                        <a href="{{ path('api_IMDB_show') }}">explorer</a>
                         {% if is_granted('ROLE_ADMIN') %}
                             <a href="{{ path('api_edit', {'api': api.id}) }}">editer</a>
                         {% endif %}

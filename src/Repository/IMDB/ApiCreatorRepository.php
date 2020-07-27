@@ -1,26 +1,26 @@
 <?php
 
-namespace App\Repository;
+namespace App\Repository\IMDB;
 
-use App\Entity\ApiActor;
+use App\Entity\IMDB\ApiCreator;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method ApiActor|null find($id, $lockMode = null, $lockVersion = null)
- * @method ApiActor|null findOneBy(array $criteria, array $orderBy = null)
- * @method ApiActor[]    findAll()
- * @method ApiActor[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method ApiCreator|null find($id, $lockMode = null, $lockVersion = null)
+ * @method ApiCreator|null findOneBy(array $criteria, array $orderBy = null)
+ * @method ApiCreator[]    findAll()
+ * @method ApiCreator[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ApiActorRepository extends ServiceEntityRepository
+class ApiCreatorRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, ApiActor::class);
+        parent::__construct($registry, ApiCreator::class);
     }
 
     // /**
-    //  * @return ApiActor[] Returns an array of ApiActor objects
+    //  * @return ApiCreator[] Returns an array of ApiCreator objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class ApiActorRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?ApiActor
+    public function findOneBySomeField($value): ?ApiCreator
     {
         return $this->createQueryBuilder('a')
             ->andWhere('a.exampleField = :val')

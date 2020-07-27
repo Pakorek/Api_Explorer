@@ -1,26 +1,26 @@
 <?php
 
-namespace App\Repository;
+namespace App\Repository\IMDB;
 
-use App\Entity\ApiCategory;
+use App\Entity\IMDB\ApiActor;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method ApiCategory|null find($id, $lockMode = null, $lockVersion = null)
- * @method ApiCategory|null findOneBy(array $criteria, array $orderBy = null)
- * @method ApiCategory[]    findAll()
- * @method ApiCategory[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method ApiActor|null find($id, $lockMode = null, $lockVersion = null)
+ * @method ApiActor|null findOneBy(array $criteria, array $orderBy = null)
+ * @method ApiActor[]    findAll()
+ * @method ApiActor[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ApiCategoryRepository extends ServiceEntityRepository
+class ApiActorRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, ApiCategory::class);
+        parent::__construct($registry, ApiActor::class);
     }
 
     // /**
-    //  * @return ApiCategory[] Returns an array of ApiCategory objects
+    //  * @return ApiActor[] Returns an array of ApiActor objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class ApiCategoryRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?ApiCategory
+    public function findOneBySomeField($value): ?ApiActor
     {
         return $this->createQueryBuilder('a')
             ->andWhere('a.exampleField = :val')
