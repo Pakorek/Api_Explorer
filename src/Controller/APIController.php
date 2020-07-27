@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\API;
-use App\Entity\Program;
+use App\Entity\IMDB\Program;
 use App\Form\APIType;
 use App\Form\BugReportType;
 use App\Form\searchProgramType;
@@ -58,6 +58,49 @@ class APIController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
+    /**
+     * @Route("/category/{categoryName<^[a-zA-Z-]+$>?null}", name="show_category")
+     *
+     * @param string $categoryName
+     * @return Response
+     */
+    public function showByCategory(string $categoryName):Response
+    {
+        if (!$categoryName) {
+            throw $this
+                ->createNotFoundException('No category has been sent to find programs');
+        }
+
+        // En partant du principe que toutes les catégories sont au format Capitalize (BDD)
+        // Et pour pallier l'éventuelle erreur type 'science_fiction' au lieu de 'science-fiction'
+        $categoryName = preg_replace(
+            '/_/',
+            '-', ucwords(trim(strip_tags($categoryName)), "_")
+        );
+
+        /*
+                // On récupère l'Objet $category
+                // On pourra ainsi récupérer le category_id correspondant au categoryName
+                $category = $this->getDoctrine()
+                    ->getRepository(Category::class)
+                    ->findOneBy(['name' => $categoryName]);
+
+                // for now, one api / category, but eventually ManyToMany later
+                $apis = $this->getDoctrine()
+                    ->getRepository(Program::class)
+                    ->findBy(['category' => $category->getId()], ['name' => 'ASC']);
+        */
+        // for now, one api / category, but eventually ManyToMany later
+        $apis = $this->getDoctrine()
+            ->getRepository(API::class)
+            ->findBy(['category' => $categoryName], ['name' => 'ASC']);
+
+        return $this->render('user/show_by_category.html.twig', [
+            'apis' => $apis,
+        ]);
+    }
+
 
     /**
      * @Route("/{api}", name="show", methods={"GET","POST"})
