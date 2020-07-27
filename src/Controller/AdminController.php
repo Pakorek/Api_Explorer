@@ -23,14 +23,6 @@ class AdminController extends AbstractController
      */
     public function index(): Response
     {
-//        $programs = $this->getDoctrine()
-//            ->getRepository(Program::class)
-//            ->findAll();
-//
-//        if (!$programs) {
-//            throw $this->createNotFoundException('No program found in program\'s table');
-//        }
-
         return $this->render('admin/index.html.twig');
     }
 
@@ -52,5 +44,11 @@ class AdminController extends AbstractController
     public function toParamate(): Response
     {
         return $this->render('admin/parameters.html.twig');
+    }
+
+    public function growIMDB()
+    {
+        // manage IMDB API here
+
     }
 }

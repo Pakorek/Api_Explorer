@@ -43,6 +43,12 @@ class UserController extends AbstractController
         return $this->render('user/index.html.twig', ['form' => $form->createView()]);
     }
 
+    /**
+     * Embedding Controller in fragments/_nav_bar.html.twig
+     *
+     * @param APIRepository $apiRepo
+     * @return Response
+     */
     public function showCategories(APIRepository $apiRepo): Response
     {
         $categories = [];
