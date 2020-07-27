@@ -2,74 +2,21 @@
 
 namespace App\Services;
 
-use App\Entity\Actor;
-use App\Entity\ApiActor;
-use App\Entity\ApiCategory;
-use App\Entity\ApiCreator;
-use App\Entity\ApiEpisode;
-use App\Entity\ApiProgram;
-use App\Entity\ApiSeason;
-use App\Entity\Category;
-use App\Entity\Creator;
-use App\Entity\Episode;
-use App\Entity\Program;
-use App\Entity\Season;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ManagerRegistry;
+use App\Entity\IMDB\Actor;
+use App\Entity\IMDB\ApiActor;
+use App\Entity\IMDB\ApiCategory;
+use App\Entity\IMDB\ApiCreator;
+use App\Entity\IMDB\ApiEpisode;
+use App\Entity\IMDB\ApiProgram;
+use App\Entity\IMDB\ApiSeason;
+use App\Entity\IMDB\Category;
+use App\Entity\IMDB\Creator;
+use App\Entity\IMDB\Episode;
+use App\Entity\IMDB\Program;
+use App\Entity\IMDB\Season;
 
-class apiManager
+class apiManager extends abstractManager
 {
-    private $em;
-
-    private $doctrine;
-
-    public function __construct(EntityManagerInterface $em, ManagerRegistry $doctrine)
-    {
-        $this->setEm($em);
-        $this->setDoctrine($doctrine);
-    }
-
-    /**
-     * @param mixed $em
-     */
-    public function setEm($em): void
-    {
-        $this->em = $em;
-    }
-
-    /**
-     * @param mixed $doctrine
-     */
-    public function setDoctrine($doctrine): void
-    {
-        $this->doctrine = $doctrine;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEm()
-    {
-        return $this->em;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDoctrine()
-    {
-        return $this->doctrine;
-    }
-
-    public function cleanInput(string $input):string
-    {
-        $input = trim($input);
-        $input = stripslashes($input);
-        $input = htmlspecialchars($input);
-
-        return $input;
-    }
-
     public function getAllApiRepo():array
     {
         return $repos = [

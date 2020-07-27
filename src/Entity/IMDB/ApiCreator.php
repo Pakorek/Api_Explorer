@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\IMDB;
 
-use App\Repository\ApiCategoryRepository;
+use App\Repository\ApiCreatorRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=ApiCategoryRepository::class)
+ * @ORM\Entity(repositoryClass=ApiCreatorRepository::class)
  */
-class ApiCategory
+class ApiCreator
 {
     /**
      * @ORM\Id()
@@ -22,10 +22,15 @@ class ApiCategory
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $name;
+    private $api_id;
 
     /**
-     * @ORM\ManyToMany(targetEntity=ApiProgram::class, inversedBy="apiCategories")
+     * @ORM\Column(type="string", length=255)
+     */
+    private $full_name;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=ApiProgram::class, inversedBy="apiCreators")
      */
     private $programs;
 
@@ -39,14 +44,26 @@ class ApiCategory
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getApiId(): ?string
     {
-        return $this->name;
+        return $this->api_id;
     }
 
-    public function setName(string $name): self
+    public function setApiId(string $api_id): self
     {
-        $this->name = $name;
+        $this->api_id = $api_id;
+
+        return $this;
+    }
+
+    public function getFullName(): ?string
+    {
+        return $this->full_name;
+    }
+
+    public function setFullName(string $full_name): self
+    {
+        $this->full_name = $full_name;
 
         return $this;
     }
