@@ -273,7 +273,6 @@ class apiManager extends abstractManager
             // fill
 
             $infos = self::getProgramInfosWithAPIId($apiId, $key);
-            dump($infos);
             $details = self::getAllDetails($apiId, sizeof($infos->tvSeriesInfo->seasons), $key);
             self::fillApiDB($infos, $details);
             self::updateBDD();
