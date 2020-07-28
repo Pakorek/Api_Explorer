@@ -21,7 +21,7 @@ class IMDBController extends APIController
 
     public function __construct(APIRepository $apiRepository)
     {
-        $this->setApi($apiRepository->find(2));
+        $this->setApi($apiRepository->findOneBy(['name' => 'IMDB']));
     }
 
     /**

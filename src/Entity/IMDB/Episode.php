@@ -2,7 +2,7 @@
 
 namespace App\Entity\IMDB;
 
-use App\Repository\EpisodeRepository;
+use App\Repository\IMDB\EpisodeRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

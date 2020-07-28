@@ -2,7 +2,7 @@
 
 namespace App\Entity\IMDB;
 
-use App\Repository\ApiCreatorRepository;
+use App\Repository\IMDB\ApiCreatorRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;

@@ -65,7 +65,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/category/{categoryName<^[a-zA-Z-]+$>?null}", name="show_category")
+     * @Route("/category/{categoryName<^[a-zA-Z- &]+$>?null}", name="show_category")
      *
      * @param string $categoryName
      * @return Response
