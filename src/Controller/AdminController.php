@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,7 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
  * @Route("/admin", name="admin_")
  *
  * Class AdminController
- * @package App\Controller
+ * @IsGranted("ROLE_ADMIN")
  */
 class AdminController extends AbstractController
 {
@@ -23,14 +24,6 @@ class AdminController extends AbstractController
      */
     public function index(): Response
     {
-//        $programs = $this->getDoctrine()
-//            ->getRepository(Program::class)
-//            ->findAll();
-//
-//        if (!$programs) {
-//            throw $this->createNotFoundException('No program found in program\'s table');
-//        }
-
         return $this->render('admin/index.html.twig');
     }
 
@@ -52,5 +45,11 @@ class AdminController extends AbstractController
     public function toParamate(): Response
     {
         return $this->render('admin/parameters.html.twig');
+    }
+
+    public function growIMDB()
+    {
+        // manage IMDB API here
+
     }
 }

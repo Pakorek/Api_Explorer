@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\IMDB;
 
-use App\Repository\CreatorRepository;
+use App\Repository\IMDB\CreatorRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

@@ -5,6 +5,7 @@
         {{ form_start(form) }}
         {{ form_widget(form.search) }}
         {{ form_end(form) }}
+        <a href="{{ path('api_index') }}">Voir la liste de toutes les apis</a>
     </section>
 
     <br><br><br><br>
@@ -21,4 +22,3 @@
     </section>
 
 {% endblock %}
-

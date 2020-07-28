@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\IMDB;
 
-use App\Repository\ApiCreatorRepository;
+use App\Repository\IMDB\ApiActorRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=ApiCreatorRepository::class)
+ * @ORM\Entity(repositoryClass=ApiActorRepository::class)
  */
-class ApiCreator
+class ApiActor
 {
     /**
      * @ORM\Id()
@@ -27,12 +27,27 @@ class ApiCreator
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $full_name;
+    private $name;
 
     /**
-     * @ORM\ManyToMany(targetEntity=ApiProgram::class, inversedBy="apiCreators")
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $birth_date;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=ApiProgram::class, inversedBy="apiActors")
      */
     private $programs;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $asCharacter;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $image;
 
     public function __construct()
     {
@@ -56,14 +71,26 @@ class ApiCreator
         return $this;
     }
 
-    public function getFullName(): ?string
+    public function getName(): ?string
     {
-        return $this->full_name;
+        return $this->name;
     }
 
-    public function setFullName(string $full_name): self
+    public function setName(string $name): self
     {
-        $this->full_name = $full_name;
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getBirthDate(): ?\DateTimeInterface
+    {
+        return $this->birth_date;
+    }
+
+    public function setBirthDate(\DateTimeInterface $birth_date): self
+    {
+        $this->birth_date = $birth_date;
 
         return $this;
     }
@@ -90,6 +117,30 @@ class ApiCreator
         if ($this->programs->contains($program)) {
             $this->programs->removeElement($program);
         }
+
+        return $this;
+    }
+
+    public function getAsCharacter(): ?string
+    {
+        return $this->asCharacter;
+    }
+
+    public function setAsCharacter(string $asCharacter): self
+    {
+        $this->asCharacter = $asCharacter;
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): self
+    {
+        $this->image = $image;
 
         return $this;
     }

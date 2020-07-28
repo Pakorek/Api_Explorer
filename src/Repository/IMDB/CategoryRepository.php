@@ -1,26 +1,26 @@
 <?php
 
-namespace App\Repository;
+namespace App\Repository\IMDB;
 
-use App\Entity\Creator;
+use App\Entity\IMDB\Category;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method Creator|null find($id, $lockMode = null, $lockVersion = null)
- * @method Creator|null findOneBy(array $criteria, array $orderBy = null)
- * @method Creator[]    findAll()
- * @method Creator[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Category|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Category|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Category[]    findAll()
+ * @method Category[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class CreatorRepository extends ServiceEntityRepository
+class CategoryRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Creator::class);
+        parent::__construct($registry, Category::class);
     }
 
     // /**
-    //  * @return Creator[] Returns an array of Creator objects
+    //  * @return Category[] Returns an array of Category objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class CreatorRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?Creator
+    public function findOneBySomeField($value): ?Category
     {
         return $this->createQueryBuilder('c')
             ->andWhere('c.exampleField = :val')
