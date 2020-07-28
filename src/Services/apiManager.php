@@ -103,6 +103,8 @@ class apiManager extends abstractManager
 
         curl_close($curl);
 
+        dump($details);
+
         return $details;
     }
 
@@ -269,7 +271,9 @@ class apiManager extends abstractManager
             //update if > n days
         } else {
             // fill
+
             $infos = self::getProgramInfosWithAPIId($apiId, $key);
+            dump($infos);
             $details = self::getAllDetails($apiId, sizeof($infos->tvSeriesInfo->seasons), $key);
             self::fillApiDB($infos, $details);
             self::updateBDD();
