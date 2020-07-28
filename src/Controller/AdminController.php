@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 
+use App\Repository\UserRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,9 +28,15 @@ class AdminController extends AbstractController
         return $this->render('admin/index.html.twig');
     }
 
-    public function manageUsers(): Response
+    /**
+     * @Route("/users", name="manage_users")
+     *
+     * @param UserRepository $userRepo
+     * @return Response
+     */
+    public function manageUsers(UserRepository $userRepo): Response
     {
-        return $this->render('admin/manage_users.html.twig');
+        return $this->render('admin/manage_users.html.twig', ['users' => $userRepo->findUsers()]);
     }
 
 //    public function manageAPI(): Response

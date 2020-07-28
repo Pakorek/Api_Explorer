@@ -5,7 +5,9 @@
     <section class="container" id="wild_category">
         {% for api in apis %}
             <div>
-                <h2>{{ loop.index }} / {{ api.name }} <a href="{{ path('api_show', {'api': api.id}) }}">+</a></h2>
+                <h2>{{ loop.index }} / {{ api.name }}
+{#                    <a href="{{ path('api_show', {'api': api.id}) }}">+</a>#}
+                </h2>
                 <p>{{ api.description }}</p>
             </div>
         {% else %}
