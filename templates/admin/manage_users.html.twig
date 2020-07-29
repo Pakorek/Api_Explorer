@@ -2,9 +2,17 @@
 
 {% block body %}
     <section class="container-fluid" id="manage_users">
+
+        <a href="{{ path('admin_manage_users') }}">Liste Complète</a>
+
+        {{ form_start(form) }}
+        {{ form_widget(form.search) }}
+        {{ form_end(form) }}
+
         <table class="table">
             <thead>
             <tr>
+                <th>ID</th>
                 <th>Nom</th>
                 <th>Email</th>
                 <th>Formule</th>
@@ -14,6 +22,7 @@
             <tbody>
             {% for user in users %}
                 <tr>
+                    <td>{{ user.id }}</td>
                     <td>{{ user.name }}</td>
                     <td>{{ user.email }}</td>
                     <td>{{ user.billingPlan??'Free' }}</td>

@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 
+use App\Form\searchUserType;
 use App\Repository\UserRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -32,11 +33,22 @@ class AdminController extends AbstractController
      * @Route("/users", name="manage_users")
      *
      * @param UserRepository $userRepo
+     * @param Request $request
      * @return Response
      */
-    public function manageUsers(UserRepository $userRepo): Response
+    public function manageUsers(UserRepository $userRepo, Request $request): Response
     {
-        return $this->render('admin/manage_users.html.twig', ['users' => $userRepo->findUsers()]);
+        $users = $userRepo->findUsers();
+
+        $form = $this->createForm(searchUserType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $keyword = $form->get('search')->getData();
+            $users = $userRepo->findUserByNameOrEmail($keyword);
+        }
+
+        return $this->render('admin/manage_users.html.twig', ['users' => $users, 'form' => $form->createView()]);
     }
 
 //    public function manageAPI(): Response
