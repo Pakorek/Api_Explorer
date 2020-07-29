@@ -103,8 +103,6 @@ class apiManager extends abstractManager
 
         curl_close($curl);
 
-        dump($details);
-
         return $details;
     }
 
