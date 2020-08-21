@@ -2,19 +2,19 @@
 
 namespace App\Controller;
 
-use App\Entity\BodyLocation;
-use App\Entity\BodySublocation;
-use App\Entity\Symptom;
-use App\Repository\BodyLocationRepository;
-use App\Repository\BodySublocationRepository;
-use Doctrine\ORM\EntityManagerInterface;
+//use App\Entity\BodyLocation;
+//use App\Entity\BodySublocation;
+//use App\Entity\Symptom;
+//use App\Repository\BodyLocationRepository;
+//use App\Repository\BodySublocationRepository;
+//use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+//use Symfony\Component\HttpFoundation\RedirectResponse;
+//use Symfony\Component\Routing\Annotation\Route;
+//use Symfony\Component\HttpFoundation\Request;
+//use Symfony\Component\HttpFoundation\Response;
 
-class ApiController extends AbstractController
+class apiMedicController extends AbstractController
 {
     const LANGUAGES = ['fr' => 'fr-fr', 'en' => 'en-gb', 'es' => 'es-es', 'de' => 'de-ch'];
 
@@ -131,43 +131,43 @@ class ApiController extends AbstractController
      * @param BodyLocationRepository $bodyLocs
      * @return RedirectResponse
      */
-    public function updateBodyLocation(EntityManagerInterface $em, BodySublocationRepository $bodys, BodyLocationRepository $bodyLocs)
-    {
-        $response = $this->getBodyLocation('fr');
-        $response2 = $this->getBodySubLocation(6, 'fr');
-        $response3 = $this->getSymptomsByBodySubLocation(23);
-
-        foreach ($response as $location) {
-            $bodyLocation = new BodyLocation();
-
-            $bodyLocation->setAPIId($location->ID);
-            $bodyLocation->setName($location->Name);
-            $em->persist($bodyLocation);
-        }
-
-        foreach ($response2 as $location) {
-            $subloc = new BodySublocation();
-
-            $subloc->setAPIId($location->ID);
-            $subloc->setName($location->Name);
-            $subloc->setBodyLocation($bodyLocs->findOneBy(['API_Id'=> 6]));
-            $em->persist($subloc);
-        }
-
-
-
-        foreach ($response3 as $location) {
-            $symptom = new Symptom();
-
-            $symptom->setAPIId($location->ID);
-            $symptom->setName($location->Name);
-            $symptom->setBodySublocation($bodys->findOneBy(['API_Id' => 23]));
-            $em->persist($symptom);
-        }
-        $em->flush();
-
-        return $this->redirectToRoute('api_index');
-    }
+//    public function updateBodyLocation(EntityManagerInterface $em, BodySublocationRepositor $bodys, BodyLocationRepository $bodyLocs)
+//    {
+//        $response = $this->getBodyLocation('fr');
+//        $response2 = $this->getBodySubLocation(6, 'fr');
+//        $response3 = $this->getSymptomsByBodySubLocation(23);
+//
+//        foreach ($response as $location) {
+//            $bodyLocation = new BodyLocation();
+//
+//            $bodyLocation->setAPIId($location->ID);
+//            $bodyLocation->setName($location->Name);
+//            $em->persist($bodyLocation);
+//        }
+//
+//        foreach ($response2 as $location) {
+//            $subloc = new BodySublocation();
+//
+//            $subloc->setAPIId($location->ID);
+//            $subloc->setName($location->Name);
+//            $subloc->setBodyLocation($bodyLocs->findOneBy(['API_Id'=> 6]));
+//            $em->persist($subloc);
+//        }
+//
+//
+//
+//        foreach ($response3 as $location) {
+//            $symptom = new Symptom();
+//
+//            $symptom->setAPIId($location->ID);
+//            $symptom->setName($location->Name);
+//            $symptom->setBodySublocation($bodys->findOneBy(['API_Id' => 23]));
+//            $em->persist($symptom);
+//        }
+//        $em->flush();
+//
+//        return $this->redirectToRoute('api_index');
+//    }
 
     public static function getSpecialists(array $symptoms)
     {
