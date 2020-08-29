@@ -31,17 +31,18 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 #get_program_title, .all_episodes {
-    figure {
-        display: inline-table;
+    .col-md-4 {
+        padding: 10px;
+    }
+
+    button {
+        font-weight: bold;
+        font-size: 1.4rem;
+
         img {
-            height: 300px;
+            height: 100px;
         }
 
-        figcaption {
-            text-align: center;
-            font-weight: bold;
-            font-size: 1.4rem;
-        }
     }
 }
 
