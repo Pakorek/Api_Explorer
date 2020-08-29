@@ -14,22 +14,22 @@
                 <p class="creator">Created by{% for creator in program.creators %} {{ creator.fullName }} | {% endfor %}</p>
                 <p class="actor">With {% for actor in program.actors %}{{ actor.name }} | {% endfor %}</p>
                 <cite class="awards">{{ program.awards }}</cite>
-            </article>
 
+            </article>
             {% for season in program.seasons %}
-                <button type="button" class="btn btn-outline-primary" data-toggle="season_{{ season.number }}" data-target="#demo">Season {{ season.number }}</button>
-                <div id="demo" class="season_{{ season.number }} row">
+                <button type="button" class="btn btn-outline-primary" data-toggle="collapse" data-target="#season_{{ season.number }}">Season {{ season.number }}</button>
+                <div id="season_{{ season.number }}" class="collapse row">
                     {% for episode in season.episodes  %}
-                        <form method="POST">
-                            <button type="submit">
-                                <figure class="col-md-4 col-lg-3 figure_results">
-                                    <figcaption>{{ episode.number }} - {{ episode.title }}</figcaption>
-                                    <img src="{{ episode.poster }}" alt="">
-                                    <em>{{ episode.released }}</em>
-                                </figure>
-                                <input type="hidden" name="get_episode_details" value="{{ episode.id }}">
-                            </button>
-                        </form>
+                        <div class="col-md-4 col-lg-3">
+                            <form method="POST" id="mada">
+                                <p>{{ episode.number }} - {{ episode.title }}</p>
+                                <button type="submit">
+                                    <img src="{{ episode.poster }}" alt="" class="img-fluid">
+                                    <input type="hidden" name="get_episode_details" value="{{ episode.id }}">
+                                </button>
+                                <em>{{ episode.released }}</em>
+                            </form>
+                        </div>
                     {% endfor %}
                 </div>
 
