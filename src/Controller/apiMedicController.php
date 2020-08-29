@@ -2,32 +2,31 @@
 
 namespace App\Controller;
 
-//use App\Entity\BodyLocation;
-//use App\Entity\BodySublocation;
-//use App\Entity\Symptom;
-//use App\Repository\BodyLocationRepository;
-//use App\Repository\BodySublocationRepository;
-//use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\ApiMedic\BodyLocation;
+use App\Entity\ApiMedic\BodySublocation;
+use App\Entity\ApiMedic\Symptom;
+use App\Repository\ApiMedic\BodyLocationRepository;
+use App\Repository\ApiMedic\BodySublocationRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-//use Symfony\Component\HttpFoundation\RedirectResponse;
-//use Symfony\Component\Routing\Annotation\Route;
-//use Symfony\Component\HttpFoundation\Request;
-//use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class apiMedicController extends AbstractController
 {
     const LANGUAGES = ['fr' => 'fr-fr', 'en' => 'en-gb', 'es' => 'es-es', 'de' => 'de-ch'];
 
-    /**
-     * @Route("/API", name="api_index")
-     */
-    public function index():Response
-    {
-        $bodyLocations = $this->getBodyLocation('fr');
-
-        return $this->render('API/index.html.twig', ['bodyLocations' => $bodyLocations]);
-
-    }
+//    /**
+//     * @Route("/API", name="api_index")
+//     */
+//    public function index():Response
+//    {
+//        $bodyLocations = $this->getBodyLocation('fr');
+//
+//        return $this->render('API/index.html.twig', ['bodyLocations' => $bodyLocations]);
+//    }
 
 
     public function getBodyLocation(string $language): array
@@ -123,14 +122,14 @@ class apiMedicController extends AbstractController
         return json_decode($response);
     }
 
-    /**
-     * @Route("/API/update")
-     *
-     * @param EntityManagerInterface $em
-     * @param BodySublocationRepository $bodys
-     * @param BodyLocationRepository $bodyLocs
-     * @return RedirectResponse
-     */
+//    /**
+//     * @Route("/API/update")
+//     *
+//     * @param EntityManagerInterface $em
+//     * @param BodySublocationRepository $bodys
+//     * @param BodyLocationRepository $bodyLocs
+//     * @return RedirectResponse
+//     */
 //    public function updateBodyLocation(EntityManagerInterface $em, BodySublocationRepositor $bodys, BodyLocationRepository $bodyLocs)
 //    {
 //        $response = $this->getBodyLocation('fr');

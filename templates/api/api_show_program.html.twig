@@ -4,18 +4,39 @@
 
 {% block body %}
 
-    {% if program is defined %}
-        {{ dump(program) }}
+    <section class="all_episodes container-fluid">
+        {% if program is defined %}
+            <article class="program_details">
+                <img src="{{ program.poster }}" alt="poster">
+                <h1>{{ program.title }} - <span>{{ program.year }} - {{ program.endYear }}</span></h1>
+                <p class="category">{% for category in program.categories %}{{ category.name|capitalize }} | {% endfor %}</p>
+                <blockquote>{{ program.summary }}</blockquote>
+                <p class="creator">Created by{% for creator in program.creators %} {{ creator.fullName }} | {% endfor %}</p>
+                <p class="actor">With {% for actor in program.actors %}{{ actor.name }} | {% endfor %}</p>
+                <cite class="awards">{{ program.awards }}</cite>
+            </article>
 
-        {% for season in program.seasons %}
-            {{ dump(season) }}
+            {% for season in program.seasons %}
+                <button type="button" class="btn btn-outline-primary" data-toggle="season_{{ season.number }}" data-target="#demo">Season {{ season.number }}</button>
+                <div id="demo" class="season_{{ season.number }} row">
+                    {% for episode in season.episodes  %}
+                        <form method="POST">
+                            <button type="submit">
+                                <figure class="col-md-4 col-lg-3 figure_results">
+                                    <figcaption>{{ episode.number }} - {{ episode.title }}</figcaption>
+                                    <img src="{{ episode.poster }}" alt="">
+                                    <em>{{ episode.released }}</em>
+                                </figure>
+                                <input type="hidden" name="get_episode_details" value="{{ episode.id }}">
+                            </button>
+                        </form>
+                    {% endfor %}
+                </div>
 
-            {% for episode in season.episodes  %}
-                {{ dump(episode) }}
+
             {% endfor %}
-        {% endfor %}
-    {% endif %}
-
+        {% endif %}
+    </section>
     <section class="container d-flex justify-content-between">
         <a href="{{ path('api_index') }}">Retour aux APIs</a>
         <a href="{{ path('explorer_index') }}">Retour à l'accueil</a>
