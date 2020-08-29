@@ -22,19 +22,19 @@
     {% if programs is defined %}
         <section class="container" id="get_program_title">
 
-            <h2>Résultat de la recherche</h2>
+{#            <h2>Résultat de la recherche</h2>#}
 
             <article class="row">
                 {% for result in programs.results %}
-                    <form method="POST">
+                <div class="col-md-4 col-lg-3">
+                    <form method="POST" id="mada">
+                        <p>{{ result.title }}</p>
                         <button type="submit">
-                            <figure class="col-md-4 col-lg-3">
-                                <figcaption>{{ result.title }}</figcaption>
-                                <img src="{{ result.image }}" alt="">
-                            </figure>
+                                <img src="{{ result.image }}" alt="" class="img-fluid">
                             <input type="hidden" name="get_details" value="{{ result.id }}">
                         </button>
                     </form>
+                </div>
                 {% else %}
                     Aucune série trouvée
                 {% endfor %}
