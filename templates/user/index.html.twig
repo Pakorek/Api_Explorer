@@ -1,24 +1,16 @@
 {% extends "base.html.twig" %}
 
 {% block body %}
-    <section class="container-fluid">
+    <section class="container" id="user_index">
         {{ form_start(form) }}
         {{ form_widget(form.search) }}
         {{ form_end(form) }}
-        <a href="{{ path('api_index') }}">Voir la liste de toutes les apis</a>
-    </section>
-
-    <br><br><br><br>
-
-    <section class="container-fluid">
-        <h1>Bienvenue sur API Explorer !</h1>
-        <blockquote>
-            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorum, sapiente.</div>
-            <div>Cupiditate, doloribus nobis odit perferendis saepe sequi sit soluta veniam!</div>
-            <div>Dolor ducimus eius fuga, molestias quidem quis sint sit voluptatibus.</div>
-            <div>Asperiores autem deleniti, dicta ex in quidem! Adipisci, consequuntur nostrum!</div>
-            <div>Beatae cum doloribus eligendi magnam ratione repudiandae veniam veritatis! Expedita!</div>
-        </blockquote>
+        <a href="{{ path('api_index') }}">See all</a>
+        <article id="welcome" class="mt-5">
+            <h1>Bienvenue sur API Explorer !</h1>
+            <blockquote>
+            </blockquote>
+        </article>
     </section>
 
 {% endblock %}

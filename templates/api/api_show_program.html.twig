@@ -4,44 +4,49 @@
 
 {% block body %}
 
-    <section class="all_episodes container-fluid">
+    <section class="all_episodes container">
         {% if program is defined %}
-            <article class="program_details">
-                <img src="{{ program.poster }}" alt="poster">
-                <h1>{{ program.title }} - <span>{{ program.year }} - {{ program.endYear }}</span></h1>
-                <p class="category">{% for category in program.categories %}{{ category.name|capitalize }} | {% endfor %}</p>
-                <blockquote>{{ program.summary }}</blockquote>
-                <p class="creator">Created by{% for creator in program.creators %} {{ creator.fullName }} | {% endfor %}</p>
-                <p class="actor">With {% for actor in program.actors %}{{ actor.name }} | {% endfor %}</p>
-                <cite class="awards">{{ program.awards }}</cite>
-
-            </article>
-            {% for season in program.seasons %}
-                <button type="button" class="btn btn-outline-primary" data-toggle="collapse" data-target="#season_{{ season.number }}">Season {{ season.number }}</button>
-                <div id="season_{{ season.number }}" class="collapse row">
-                    {% for episode in season.episodes  %}
-                        <div class="col-md-4 col-lg-3">
-                            <form method="POST" id="mada">
-                                <p>{{ episode.number }} - {{ episode.title }}</p>
-                                <button type="submit">
-                                    <img src="{{ episode.poster }}" alt="" class="img-fluid">
-                                    <input type="hidden" name="get_episode_details" value="{{ episode.id }}">
-                                </button>
-                                <em>{{ episode.released }}</em>
-                            </form>
-                        </div>
-                    {% endfor %}
+            <article class="program_details row">
+                <div class="col-lg-4">
+                    <img src="{{ program.poster }}" alt="poster">
                 </div>
-
-
-            {% endfor %}
+                <div class="col-lg-8">
+                    <h1>{{ program.title }} - <span>{{ program.year }} - {{ program.endYear }}</span></h1>
+                    <p class="category">{% for category in program.categories %}{{ category.name|capitalize }} | {% endfor %}</p>
+                    <blockquote>{{ program.summary }}</blockquote>
+                    <p class="creator">Created by{% for creator in program.creators %} {{ creator.fullName }} | {% endfor %}</p>
+                    <p class="actor">With {% for actor in program.actors %}{{ actor.name }} | {% endfor %}</p>
+                    <cite class="awards">{{ program.awards }}</cite>
+                </div>
+            </article>
+            <article class="seasons">
+                {% for season in program.seasons %}
+                    <button type="button" class="btn" data-toggle="collapse" data-target="#season_{{ season.number }}">Season {{ season.number }}</button>
+                    <div id="season_{{ season.number }}" class="collapse row">
+                        {% for episode in season.episodes  %}
+                            <div class="col-md-4 col-lg-3">
+                                <form method="POST" id="mada">
+                                    <p>{{ episode.number }} - {{ episode.title }}</p>
+                                    <button type="submit">
+                                        <img src="{{ episode.poster }}" alt="" class="img-fluid">
+                                        <input type="hidden" name="get_episode_details" value="{{ episode.id }}">
+                                    </button>
+                                    <em>{{ episode.released }}</em>
+                                </form>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </article>
         {% endif %}
+        <footer class="container d-flex justify-content-between">
+            <a href="{{ path('api_index') }}">Retour aux APIs</a>
+            <a href="{{ path('explorer_index') }}">Retour à l'accueil</a>
+        </footer>
     </section>
-    <section class="container d-flex justify-content-between">
-        <a href="{{ path('api_index') }}">Retour aux APIs</a>
-        <a href="{{ path('explorer_index') }}">Retour à l'accueil</a>
-    </section>
+{#
     {% if is_granted("ROLE_ADMIN") %}
         {{ include('api/_delete_form.html.twig') }}
     {% endif %}
+#}
 {% endblock %}

@@ -14,10 +14,10 @@ class searchApiType extends AbstractType
             ->setMethod('POST')
             ->add('search', TextType::class, [
                 'attr' =>[
-                    'placeholder' => 'Rechercher une API : IMDB, Genius, ApiMedic ...',
+                    'placeholder' => 'Search an API : IMDB, Genius, ApiMedic ...',
                     'class' => "form-control-lg"
                 ],
-                'label' => 'Rechercher une API'])
+                'label' => 'Search an API'])
             ;
     }
 }
